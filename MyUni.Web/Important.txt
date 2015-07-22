@@ -36,7 +36,11 @@ Cannot attach the file *.mdf as database error
 ----------------------------------------------
 http://stackoverflow.com/questions/17012839/cannot-attach-the-file-mdf-as-database
 
+Solution 1
 -	Remove the "initial catalog" from the connection string.
+
+Solution 2
+-	Change the database name
 
 
 
