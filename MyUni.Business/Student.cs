@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,5 +16,10 @@ namespace MyUni.Business
         public DateTime EnrolledDate { get; set; }
 
         public virtual ICollection<Enrollment> Enrollments { get; set; }
+
+        public Student()
+        {
+            this.Enrollments = new Collection<Enrollment>();
+        }
     }
 }

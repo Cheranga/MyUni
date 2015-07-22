@@ -30,3 +30,41 @@ http://stackoverflow.com/questions/19982053/how-do-i-add-an-existing-solution-to
 	6.6	Select Home | Changes
 	6.7	Add a Commit comment
 	6.8	Select Commit and Push from the drop down
+
+
+Cannot attach the file *.mdf as database error
+----------------------------------------------
+http://stackoverflow.com/questions/17012839/cannot-attach-the-file-mdf-as-database
+
+-	Remove the "initial catalog" from the connection string.
+
+
+
+
+Entity States and the Attach and SaveChanges Methods
+----------------------------------------------------
+
+https://msdn.microsoft.com/en-us/data/jj592676
+https://msdn.microsoft.com/en-us/data/jj592872
+
+The database context keeps track of whether entities in memory are in sync with their corresponding rows in the database, and this information determines what happens when you call the SaveChanges method. 
+For example, when you pass a new entity to the Add method, that entity's state is set to Added. Then when you call the SaveChanges method, the database context issues a SQL INSERT command.
+
+An entity may be in one of the following states:
+
+1.	Added. The entity does not yet exist in the database. The SaveChanges method must issue an INSERT statement.
+2.	Unchanged. Nothing needs to be done with this entity by the SaveChanges method. When you read an entity from the database, the entity starts out with this status.
+3.	Modified. Some or all of the entity's property values have been modified. The SaveChanges method must issue an UPDATE statement.
+4.	Deleted. The entity has been marked for deletion. The SaveChanges method must issue a DELETE statement.
+5.	Detached. The entity isn't being tracked by the database context.
+	In a desktop application, state changes are typically set automatically. In a desktop type of application, you read an entity and make changes to some of its property values. 
+	This causes its entity state to automatically be changed to Modified. Then when you call SaveChanges, the Entity Framework generates a SQL UPDATE statement that updates only the actual properties that you changed.
+
+The disconnected nature of web apps doesn't allow for this continuous sequence. 
+The DbContext that reads an entity is disposed after a page is rendered. 
+When the HttpPost Edit action method is called,  a new request is made and you have a new instance of the DbContext, so you have to manually set the entity state to Modified. 
+Then when you call SaveChanges, the Entity Framework updates all columns of the database row, because the context has no way to know which properties you changed.
+
+If you want the SQL Update statement to update only the fields that the user actually changed, you can save the original values in some way (such as hidden fields) so that they are available when the HttpPost Edit method is called. 
+Then you can create a Student entity using the original values, call the Attach method with that original version of the entity, update the entity's values to the new values, and then call SaveChanges.
+For more information, see Entity states and SaveChanges and Local Data in the MSDN Data Developer Center.

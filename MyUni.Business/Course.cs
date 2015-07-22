@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MyUni.Business
 {
@@ -9,5 +10,10 @@ namespace MyUni.Business
         public int Credits { get; set; }
 
         public virtual ICollection<Enrollment> Enrollments { get; set; }
+
+        public Course()
+        {
+            this.Enrollments = new Collection<Enrollment>();
+        }
     }
 }

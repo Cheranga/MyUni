@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +35,9 @@ namespace MyUni.DAL
 
         public MyUniDbContext():base(MyUniConnectionString)
         {
-            this.Configuration.LazyLoadingEnabled = false;
+            //this.Configuration.LazyLoadingEnabled = false;
+
+            this.Database.Log = (x) => Debug.WriteLine(x);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -46,6 +50,7 @@ namespace MyUni.DAL
             // Add entity configurations
             //
             modelBuilder.Configurations.Add(new EnrollmentConfiguration());
+            modelBuilder.Configurations.Add(new StudentConfiguration());
             
         }
     }

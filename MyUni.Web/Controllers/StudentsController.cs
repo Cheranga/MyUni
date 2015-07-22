@@ -47,13 +47,21 @@ namespace MyUni.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,FirstName,LastName,EnrolledDate")] Student student)
+        public ActionResult Create([Bind(Include = "FirstName,LastName,EnrolledDate")] Student student)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Students.Add(student);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Students.Add(student);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception exception)
+            {
+
+
             }
 
             return View(student);
@@ -77,26 +85,48 @@ namespace MyUni.Web.Controllers
         // POST: Students/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,EnrolledDate")] Student student)
+        public ActionResult EditPost(int? id)
         {
-            if (ModelState.IsValid)
+            if (!id.HasValue)
             {
-                db.Entry(student).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            return View(student);
+
+            var studentToUpdate = this.db.Students.Find(id.Value);
+
+            if (TryUpdateModel(studentToUpdate, new[] { "FirstName", "LastName", "EnrolledDate" }))
+            {
+                try
+                {
+                    this.db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError("Update failed, try again", exception);
+
+                }
+            }
+
+            return View(studentToUpdate);
+
         }
 
         // GET: Students/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id, bool showError = false)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            if (showError)
+            {
+                ViewBag.ErrorMessage = "Delete failed, try again";
+            }
+
             Student student = db.Students.Find(id);
             if (student == null)
             {
@@ -108,12 +138,30 @@ namespace MyUni.Web.Controllers
         // POST: Students/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id)
         {
-            Student student = db.Students.Find(id);
-            db.Students.Remove(student);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                //
+                // This way of deleting the student will involve sending 2 queries to the database (one to fetch, and one to delete the entity)
+                //
+                //Student student = db.Students.Find(id);
+                //db.Students.Remove(student);
+
+                var tempStudent = new Student { Id = id };
+                var studentEntity = this.db.Entry(tempStudent);
+                if (studentEntity != null)
+                {
+                    this.db.Entry(tempStudent).State = EntityState.Deleted;
+                    db.SaveChanges();
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception)
+            {
+                return RedirectToAction("Delete", new { id, showError = true });
+            }
         }
 
         protected override void Dispose(bool disposing)

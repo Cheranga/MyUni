@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configurations\EnrollmentConfiguration.cs" />
+    <Compile Include="Configurations\StudentConfiguration.cs" />
     <Compile Include="MyUniDataInitializer.cs" />
     <Compile Include="MyUniDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
