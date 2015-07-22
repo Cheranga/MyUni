@@ -1,0 +1,32 @@
+﻿When scaffolding with a dbcontext and when entity type configurations are defined (classes which derives EntityTypeConfiguration<T>), VS will throw an error
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+http://stackoverflow.com/questions/24974218/scaffolding-controller-doesnt-work-with-visual-studio-2013-update-3-and-4
+-	Change the DbSet<T> to IDbSet<T>
+
+
+
+
+Adding a solution to GIT HUB
+----------------------------
+http://stackoverflow.com/questions/19982053/how-do-i-add-an-existing-solution-to-github-from-visual-studio-2013
+
+
+1.	Open the solution in Visual Studio 2013
+2.	Select File | Add to Source Control
+3.	Select the Microsoft Git Provider
+4.	That creates a local GIT repository
+
+5.	Surf to GitHub
+	5.1	Create a new repository DO NOT SELECT Initialize this repository with a README
+	5.2	That creates an empty repository with no Master branch
+	5.3	Once created open the repository and copy the URL (it's on the right of the screen in the current version)
+
+6. Go back to Visual Studio
+	6.1	Make sure you have the Microsoft Git Provider selected under Tools/Options/Source Control/Plug-in Selection
+	6.2	Open Team Explorer
+	6.3	Select Home | Unsynced Commits
+	6.4	Enter the GitHub URL into the yellow box
+	6.5	Click Publish
+	6.6	Select Home | Changes
+	6.7	Add a Commit comment
+	6.8	Select Commit and Push from the drop down
