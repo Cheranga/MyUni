@@ -52,17 +52,9 @@
   <ItemGroup>
     <Compile Include="Configurations\EnrollmentConfiguration.cs" />
     <Compile Include="Configurations\StudentConfiguration.cs" />
-    <Compile Include="Migrations\201507221240596_InitialCreate.cs" />
-    <Compile Include="Migrations\201507221240596_InitialCreate.Designer.cs">
-      <DependentUpon>201507221240596_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507221243297_Student_Maxlength.cs" />
-    <Compile Include="Migrations\201507221243297_Student_Maxlength.Designer.cs">
-      <DependentUpon>201507221243297_Student_Maxlength.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507221245473_Student_ColumnName_FirstName.cs" />
-    <Compile Include="Migrations\201507221245473_Student_ColumnName_FirstName.Designer.cs">
-      <DependentUpon>201507221245473_Student_ColumnName_FirstName.cs</DependentUpon>
+    <Compile Include="Migrations\201507222346523_InitialCreate.cs" />
+    <Compile Include="Migrations\201507222346523_InitialCreate.Designer.cs">
+      <DependentUpon>201507222346523_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MyUniDataInitializer.cs" />
@@ -80,14 +72,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201507221240596_InitialCreate.resx">
-      <DependentUpon>201507221240596_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507221243297_Student_Maxlength.resx">
-      <DependentUpon>201507221243297_Student_Maxlength.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507221245473_Student_ColumnName_FirstName.resx">
-      <DependentUpon>201507221245473_Student_ColumnName_FirstName.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201507222346523_InitialCreate.resx">
+      <DependentUpon>201507222346523_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

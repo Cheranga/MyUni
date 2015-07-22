@@ -7,13 +7,13 @@ namespace MyUni.DAL.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Student_ColumnName_FirstName : IMigrationMetadata
+    public sealed partial class InitialCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Student_ColumnName_FirstName));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201507221245473_Student_ColumnName_FirstName"; }
+            get { return "201507222346523_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source
