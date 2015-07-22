@@ -7,8 +7,14 @@ namespace MyUni.DAL.Configurations
     {
         public StudentConfiguration()
         {
-            this.Property(x => x.FirstName).IsRequired();
-            this.Property(x => x.LastName).IsRequired();
+            this.Property(x => x.FirstName)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnName("FirstName");
+
+            this.Property(x => x.LastName)
+                .IsRequired()
+                .HasMaxLength(50);
         }
     }
 }

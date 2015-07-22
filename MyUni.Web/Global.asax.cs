@@ -15,7 +15,7 @@ namespace MyUni.Web
     {
         protected void Application_Start()
         {
-            Database.SetInitializer(new MyUniDataInitializer());
+            //Database.SetInitializer(new MyUniDataInitializer());
 
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
