@@ -1,0 +1,15 @@
+using System.Data.Entity.ModelConfiguration;
+using MyUni.Business;
+
+namespace MyUni.DAL.Configurations
+{
+    public class DepartmentConfiguration : EntityTypeConfiguration<Department>
+    {
+        public DepartmentConfiguration()
+        {
+            this.HasOptional(x => x.Administrator).WithMany(x => x.DepartmentsWhichAdministers).HasForeignKey(x => x.AdministratorId);
+
+
+        }
+    }
+}
