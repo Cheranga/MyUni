@@ -15,6 +15,8 @@ namespace MyUni.DAL.Configurations
             this.Property(x => x.LastName)
                 .IsRequired()
                 .HasMaxLength(50);
+
+            this.Ignore(x => x.FullName);
         }
     }
 }

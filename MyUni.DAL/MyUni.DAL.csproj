@@ -50,11 +50,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configurations\CourseConfiguration.cs" />
+    <Compile Include="Configurations\DepartmentConfiguration.cs" />
     <Compile Include="Configurations\EnrollmentConfiguration.cs" />
+    <Compile Include="Configurations\InstructorConfiguration.cs" />
+    <Compile Include="Configurations\OfficeAssignmentConfiguration.cs" />
     <Compile Include="Configurations\StudentConfiguration.cs" />
-    <Compile Include="Migrations\201507222346523_InitialCreate.cs" />
-    <Compile Include="Migrations\201507222346523_InitialCreate.Designer.cs">
-      <DependentUpon>201507222346523_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201507230637072_InitialCreate.cs" />
+    <Compile Include="Migrations\201507230637072_InitialCreate.Designer.cs">
+      <DependentUpon>201507230637072_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MyUniDataInitializer.cs" />
@@ -72,8 +76,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201507222346523_InitialCreate.resx">
-      <DependentUpon>201507222346523_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201507230637072_InitialCreate.resx">
+      <DependentUpon>201507230637072_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

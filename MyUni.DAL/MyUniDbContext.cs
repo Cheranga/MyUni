@@ -23,6 +23,9 @@ namespace MyUni.DAL
         public IDbSet<Student> Students { get; set; }
         public IDbSet<Course> Courses { get; set; }
         public IDbSet<Enrollment> Enrollments { get; set; }
+        public IDbSet<Instructor> Instructors { get; set; }
+        public IDbSet<OfficeAssignment> OfficeAssignments { get; set; }
+        public IDbSet<Department> Departments { get; set; }
 
         public static string MyUniConnectionString
         {
@@ -51,6 +54,10 @@ namespace MyUni.DAL
             //
             modelBuilder.Configurations.Add(new EnrollmentConfiguration());
             modelBuilder.Configurations.Add(new StudentConfiguration());
+            modelBuilder.Configurations.Add(new InstructorConfiguration());
+            modelBuilder.Configurations.Add(new OfficeAssignmentConfiguration());
+            modelBuilder.Configurations.Add(new CourseConfiguration());
+            modelBuilder.Configurations.Add(new DepartmentConfiguration());
             
         }
     }
