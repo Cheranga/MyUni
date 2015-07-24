@@ -13,6 +13,8 @@ namespace MyUni.DAL.Configurations
 
             this.HasMany(x => x.Courses).WithMany(x => x.Instructors);
             
+            this.Property(x => x.HireDate).HasColumnType("datetime2");
+            
 
         }
     }

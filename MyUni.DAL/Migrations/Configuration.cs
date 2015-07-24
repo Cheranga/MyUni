@@ -16,12 +16,12 @@ namespace MyUni.DAL.Migrations
 
         protected override void Seed(MyUniDbContext context)
         {
-            //SeedInstructors(context);
-            //SeedOfficeAssignments(context);
-            //SeedDepartments(context);
-            //SeedStudents(context);
-            //SeedCourses(context);
-            //SeedEnrollments(context);
+            SeedInstructors(context);
+            SeedOfficeAssignments(context);
+            SeedDepartments(context);
+            SeedStudents(context);
+            SeedCourses(context);
+            SeedEnrollments(context);
         }
 
         private void SeedStudents(MyUniDbContext context)

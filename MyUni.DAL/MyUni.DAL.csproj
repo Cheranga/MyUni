@@ -60,6 +60,10 @@
     <Compile Include="Migrations\201507230637072_InitialCreate.Designer.cs">
       <DependentUpon>201507230637072_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507240121494_Settingdatetimesqltype.cs" />
+    <Compile Include="Migrations\201507240121494_Settingdatetimesqltype.Designer.cs">
+      <DependentUpon>201507240121494_Settingdatetimesqltype.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MyUniDataInitializer.cs" />
     <Compile Include="MyUniDbContext.cs" />
@@ -78,6 +82,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201507230637072_InitialCreate.resx">
       <DependentUpon>201507230637072_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507240121494_Settingdatetimesqltype.resx">
+      <DependentUpon>201507240121494_Settingdatetimesqltype.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

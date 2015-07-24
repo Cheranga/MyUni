@@ -9,6 +9,7 @@ namespace MyUni.DAL.Configurations
         {
             this.HasOptional(x => x.Administrator).WithMany(x => x.DepartmentsWhichAdministers).HasForeignKey(x => x.AdministratorId);
 
+            this.Property(x => x.StartDate).HasColumnType("datetime2");
 
         }
     }

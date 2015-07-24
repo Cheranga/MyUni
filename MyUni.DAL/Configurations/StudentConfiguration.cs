@@ -17,6 +17,8 @@ namespace MyUni.DAL.Configurations
                 .HasMaxLength(50);
 
             this.Ignore(x => x.FullName);
+
+            this.Property(x => x.EnrolledDate).HasColumnType("datetime2");
         }
     }
 }
