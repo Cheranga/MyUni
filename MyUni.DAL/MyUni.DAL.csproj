@@ -64,6 +64,10 @@
     <Compile Include="Migrations\201507240121494_Settingdatetimesqltype.Designer.cs">
       <DependentUpon>201507240121494_Settingdatetimesqltype.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507290616293_Complexdatamodel.cs" />
+    <Compile Include="Migrations\201507290616293_Complexdatamodel.Designer.cs">
+      <DependentUpon>201507290616293_Complexdatamodel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MyUniDataInitializer.cs" />
     <Compile Include="MyUniDbContext.cs" />
@@ -85,6 +89,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507240121494_Settingdatetimesqltype.resx">
       <DependentUpon>201507240121494_Settingdatetimesqltype.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507290616293_Complexdatamodel.resx">
+      <DependentUpon>201507290616293_Complexdatamodel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MyUni.Business
 {
@@ -11,7 +12,8 @@ namespace MyUni.Business
         public decimal Budget { get; set; }
         public DateTime StartDate { get; set; }
 
-        public virtual Instructor Administrator { get; set; }
-        public virtual ICollection<Course> Courses { get; set; }
+        public Instructor Administrator { get; set; }
+        public ICollection<Course> Courses { get; set; }
+
     }
 }

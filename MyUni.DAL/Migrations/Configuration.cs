@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using MyUni.Business;
 
 namespace MyUni.DAL.Migrations
@@ -16,12 +18,19 @@ namespace MyUni.DAL.Migrations
 
         protected override void Seed(MyUniDbContext context)
         {
-            SeedInstructors(context);
-            SeedOfficeAssignments(context);
-            SeedDepartments(context);
-            SeedStudents(context);
-            SeedCourses(context);
-            SeedEnrollments(context);
+            try
+            {
+                SeedInstructors(context);
+                SeedOfficeAssignments(context);
+                SeedDepartments(context);
+                SeedStudents(context);
+                SeedCourses(context);
+                SeedEnrollments(context);
+            }
+            catch (Exception exception)
+            {
+                
+            }
         }
 
         private void SeedStudents(MyUniDbContext context)
@@ -70,12 +79,21 @@ namespace MyUni.DAL.Migrations
 
         private void SeedCourses(MyUniDbContext context)
         {
+
+            var microsoft = context.Departments.FirstOrDefault(x => x.Name == "Microsoft");
+            var clientTech = context.Departments.FirstOrDefault(x => x.Name == "Client Technologies");
+            var databases = context.Departments.FirstOrDefault(x => x.Name == "Databases");
+            var career = context.Departments.FirstOrDefault(x => x.Name == "Career Development");
+
+            var bill = context.Instructors.FirstOrDefault(x => x.FirstName == "Bill");
+            var mrCareer = context.Instructors.FirstOrDefault(x => x.FirstName == "Mr. Career");
+
             context.Courses.AddOrUpdate(x => x.Title,
-                new Course { Title = "C#", Credits = 5, Department = context.Departments.FirstOrDefault(x=>x.Name == "Microsoft")},
-                new Course { Title = "ASP.NET Web Api", Credits = 4, Department = context.Departments.FirstOrDefault(x => x.Name == "Microsoft") },
-                new Course { Title = "Javascript", Credits = 3, Department = context.Departments.FirstOrDefault(x => x.Name == "Client Technologies") },
-                new Course { Title = "MS SQL Server", Credits = 5, Department = context.Departments.FirstOrDefault(x => x.Name == "Databases") },
-                new Course { Title = "Professional Development", Credits = 3, Department = context.Departments.FirstOrDefault(x => x.Name == "Career Development") }
+                new Course { Title = "C#", Credits = 5, DepartmentId = microsoft.Id, Instructors = new Collection<Instructor>(new []{bill})},
+                new Course { Title = "ASP.NET Web Api", Credits = 4, DepartmentId = microsoft.Id, Instructors = new Collection<Instructor>(new[] { bill }) },
+                new Course { Title = "Javascript", Credits = 3, DepartmentId = clientTech.Id },
+                new Course { Title = "MS SQL Server", Credits = 5, DepartmentId = databases.Id, Instructors = new Collection<Instructor>(new[] { bill }) },
+                new Course { Title = "Professional Development", Credits = 3, DepartmentId = career.Id, Instructors = new Collection<Instructor>(new[] { mrCareer }) }
                 );
 
             context.SaveChanges();
@@ -83,26 +101,49 @@ namespace MyUni.DAL.Migrations
 
         private void SeedEnrollments(MyUniDbContext context)
         {
-            context.Enrollments.AddOrUpdate(
-                new Enrollment
-                {
-                    Student = context.Students.FirstOrDefault(x => x.FirstName == "cheranga"),
-                    Course = context.Courses.FirstOrDefault(x => x.Title == "C#"),
-                    Grade = Grade.A
-                },
-                new Enrollment
-                {
-                    Student = context.Students.FirstOrDefault(x => x.FirstName == "murali"),
-                    Course = context.Courses.FirstOrDefault(x => x.Title == "MS SQL Server"),
-                    Grade = Grade.A
-                },
-                new Enrollment
-                {
-                    Student = context.Students.FirstOrDefault(x => x.FirstName == "van"),
-                    Course = context.Courses.FirstOrDefault(x => x.Title == "ASP.NET Web Api"),
-                    Grade = Grade.A
-                }
+            //
+            // Students
+            //
+            var cheranga = context.Students.FirstOrDefault(x => x.FirstName == "cheranga");
+            var murali = context.Students.FirstOrDefault(x => x.FirstName == "murali");
+            var van = context.Students.FirstOrDefault(x => x.FirstName == "van");
+            //
+            // Courses
+            //
+            var cSharp = context.Courses.FirstOrDefault(x => x.Title == "C#");
+            var msSqlServer = context.Courses.FirstOrDefault(x => x.Title == "MS SQL Server");
+            var webApi = context.Courses.FirstOrDefault(x => x.Title == "ASP.NET Web Api");
+
+            context.Enrollments.AddOrUpdate(x=>new{x.StudentId, x.CourseId},
+                new Enrollment { StudentId = cheranga.Id, CourseId = cSharp.Id, Grade = Grade.A},
+                new Enrollment { StudentId = murali.Id, CourseId = msSqlServer.Id, Grade = Grade.A },
+                new Enrollment { StudentId = van.Id, CourseId = webApi.Id, Grade = Grade.A }
                 );
+
+            //
+            // Enrollments for Cheranga
+            //
+            //var exists = context.Enrollments.FirstOrDefault(x => x.StudentId == cheranga.Id && x.CourseId == cSharp.Id) != null;
+            //if (!exists)
+            //{
+            //    context.Enrollments.Add(new Enrollment {StudentId = cheranga.Id, CourseId = cSharp.Id});
+            //}
+            ////
+            //// Enrollments for Murali
+            ////
+            //exists = context.Enrollments.FirstOrDefault(x => x.StudentId == murali.Id && x.CourseId == msSqlServer.Id) != null;
+            //if (!exists)
+            //{
+            //    context.Enrollments.Add(new Enrollment { StudentId = murali.Id, CourseId = msSqlServer.Id });
+            //}
+            ////
+            //// Enrollments for Van
+            ////
+            //exists = context.Enrollments.FirstOrDefault(x => x.StudentId == van.Id && x.CourseId == webApi.Id) != null;
+            //if (!exists)
+            //{
+            //    context.Enrollments.Add(new Enrollment { StudentId = van.Id, CourseId = webApi.Id });
+            //}
 
             context.SaveChanges();
         }

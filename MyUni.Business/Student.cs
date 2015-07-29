@@ -23,7 +23,7 @@ namespace MyUni.Business
         [Display(Name = "Enrolled Date")]
         public DateTime EnrolledDate { get; set; }
 
-        public virtual ICollection<Enrollment> Enrollments { get; set; }
+        public ICollection<Enrollment> Enrollments { get; set; }
 
         public string FullName
         {

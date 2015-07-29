@@ -12,7 +12,7 @@ namespace MyUni.DAL.Configurations
     {
         public EnrollmentConfiguration()
         {
-            this.HasRequired(x => x.Student).WithMany(x => x.Enrollments).HasForeignKey(x => x.StudentId);
+            this.HasRequired(x => x.Student).WithMany(x=>x.Enrollments).HasForeignKey(x => x.StudentId);
             this.HasRequired(x => x.Course).WithMany(x => x.Enrollments).HasForeignKey(x => x.CourseId);
 
             this.Property(x => x.Grade).IsOptional();

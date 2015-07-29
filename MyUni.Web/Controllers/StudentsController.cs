@@ -28,7 +28,7 @@ namespace MyUni.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Student student = db.Students.Find(id);
+            var student = db.Students.Where(x => x.Id == id).Include(x => x.Enrollments.Select(y => y.Course)).FirstOrDefault();
             if (student == null)
             {
                 return HttpNotFound();

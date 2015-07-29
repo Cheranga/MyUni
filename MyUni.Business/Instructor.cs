@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyUni.Business
 {
@@ -11,17 +13,21 @@ namespace MyUni.Business
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
+        [DisplayName("Full Name")]
         public string FullName
         {
             get { return string.Format("{0} {1}", this.FirstName, this.LastName); }
         }
 
+        [DisplayName("Hire Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime HireDate { get; set; }
 
-        public virtual ICollection<Course> Courses { get; set; }
+        public ICollection<Course> Courses { get; set; }
 
-        public virtual OfficeAssignment OfficeAssignment { get; set; }
+        public OfficeAssignment OfficeAssignment { get; set; }
 
-        public virtual ICollection<Department> DepartmentsWhichAdministers { get; set; }
+        public ICollection<Department> DepartmentsWhichAdministers { get; set; }
     }
 }

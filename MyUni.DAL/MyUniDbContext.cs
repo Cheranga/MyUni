@@ -36,11 +36,20 @@ namespace MyUni.DAL
             }
         }
 
-        public MyUniDbContext():base(MyUniConnectionString)
+        public MyUniDbContext()
+            : base(MyUniConnectionString)
         {
-            //this.Configuration.LazyLoadingEnabled = false;
+            //
+            // Disable lazy loading
+            //
+            this.Configuration.LazyLoadingEnabled = false;
 
+            //
+            // Redirect the log "Debug.WriteLine" when the project is in DEBUG mode
+            //
+#if DEBUG
             this.Database.Log = (x) => Debug.WriteLine(x);
+#endif
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -58,7 +67,7 @@ namespace MyUni.DAL
             modelBuilder.Configurations.Add(new OfficeAssignmentConfiguration());
             modelBuilder.Configurations.Add(new CourseConfiguration());
             modelBuilder.Configurations.Add(new DepartmentConfiguration());
-            
+
         }
     }
 }
