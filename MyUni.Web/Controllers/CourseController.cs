@@ -59,7 +59,8 @@ namespace MyUni.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.DepartmentId = new SelectList(db.Departments, "Id", "Name", course.DepartmentId);
+            PopulateDepartments(course.DepartmentId);
+            //ViewBag.DepartmentId = new SelectList(db.Departments, "Id", "Name", course.DepartmentId);
             return View(course);
         }
 
@@ -70,13 +71,13 @@ namespace MyUni.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PopulateDepartments(id);
             Course course = db.Courses.Find(id);
             if (course == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.DepartmentId = new SelectList(db.Departments, "Id", "Name", course.DepartmentId);
+            PopulateDepartments(id);
+            //ViewBag.DepartmentId = new SelectList(db.Departments, "Id", "Name", course.DepartmentId);
             return View(course);
         }
 
@@ -93,7 +94,8 @@ namespace MyUni.Web.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.DepartmentId = new SelectList(db.Departments, "Id", "Name", course.DepartmentId);
+            PopulateDepartments(course.DepartmentId);
+            //ViewBag.DepartmentId = new SelectList(db.Departments, "Id", "Name", course.DepartmentId);
             return View(course);
         }
 

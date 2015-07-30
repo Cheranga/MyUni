@@ -100,30 +100,58 @@ namespace MyUni.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Instructor instructor = db.Instructors.Find(id);
+            
+            var instructor = db.Instructors.Include(x => x.OfficeAssignment).FirstOrDefault(x => x.Id == id);
+
             if (instructor == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.Id = new SelectList(db.OfficeAssignments, "InstructorId", "Location", instructor.Id);
+            
             return View(instructor);
         }
 
         // POST: Instructor/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [ActionName("Edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,OfficeAssignmentId,FirstName,LastName,HireDate")] Instructor instructor)
+        public ActionResult EditPost(int? id)
         {
-            if (ModelState.IsValid)
+            if (id == null)
             {
-                db.Entry(instructor).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ViewBag.Id = new SelectList(db.OfficeAssignments, "InstructorId", "Location", instructor.Id);
-            return View(instructor);
+
+            var instructorToUpdate = db.Instructors.Include(x => x.OfficeAssignment).FirstOrDefault(x => x.Id == id);
+            if (instructorToUpdate == null)
+            {
+                return new HttpNotFoundResult();
+            }
+
+            if (TryUpdateModel(instructorToUpdate, new[] {"FirstName", "LastName", "HireDate", "OfficeAssignment"}))
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(instructorToUpdate.OfficeAssignment.Location))
+                    {
+                        var currentOfficeAssignment = db.OfficeAssignments.FirstOrDefault(x => x.InstructorId == instructorToUpdate.Id);
+                        if (currentOfficeAssignment != null)
+                        {
+                            db.Entry(currentOfficeAssignment).State = EntityState.Deleted;
+                        }
+                    }
+
+                    db.SaveChanges();
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError("", "Unable to save changes.");
+                }
+            }
+
+            return View(instructorToUpdate);
         }
 
         // GET: Instructor/Delete/5
