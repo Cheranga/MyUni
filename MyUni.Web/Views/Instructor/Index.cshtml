@@ -1,0 +1,88 @@
+﻿@using System.Activities.Statements
+@model MyUni.Web.ViewModels.InstructorListViewModel
+
+@{
+    ViewBag.Title = "Instructors";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>Full Name</th>
+        <th>Hire Date</th>
+        <th>Office</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Instructors) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HireDate)
+            </td>
+            <td>
+                @if (item.OfficeAssignment != null)
+                {
+                    var location = item.OfficeAssignment.Location;
+                    <span>@location</span>
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Select", "Index", new { id = item.Id }) |
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            </td>
+        </tr>
+    }
+</table>
+
+@if (Model.Courses != null)
+{
+    <h3>Courses Taught</h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Credits</th>
+            <th></th>
+        </tr>
+        @foreach (var course in Model.Courses)
+        {
+            <tr>
+                <td>@Html.DisplayFor(x=>course.Title)</td>
+                <td>@Html.DisplayFor(x => course.Department.Name)</td>
+                <td>@Html.DisplayFor(x => course.Credits)</td>
+                <td>
+                    @Html.ActionLink("Select", "Index", new { courseId = course.Id })
+                </td>
+            </tr>
+        }
+    </table>
+    
+}
+
+@if (Model.Enrollments != null)
+{
+    <h3>Enrollments</h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Grade</th>
+        </tr>
+        @foreach (var enrollment in Model.Enrollments)
+        {
+            <tr>
+                <td>@Html.DisplayFor(x => enrollment.Student.FullName)</td>
+                <td>@Html.DisplayFor(x => enrollment.Grade)</td>
+            </tr>
+        }
+    </table>
+
+}
