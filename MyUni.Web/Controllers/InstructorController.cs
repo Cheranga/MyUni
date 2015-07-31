@@ -22,7 +22,7 @@ namespace MyUni.Web.Controllers
             //var instructors = db.Instructors.Include(i => i.OfficeAssignment);
             //return View(instructors.ToList());
 
-            var viewModel = new InstructorViewModel
+            var viewModel = new InstructorListViewModel
             {
                 Instructors = db.Instructors
                     .Include(x => x.OfficeAssignment)
@@ -71,8 +71,13 @@ namespace MyUni.Web.Controllers
         // GET: Instructor/Create
         public ActionResult Create()
         {
-            ViewBag.Id = new SelectList(db.OfficeAssignments, "InstructorId", "Location");
-            return View();
+            var viewModel = new InstructorCreateViewModel
+            {
+                HireDate = DateTime.Now,
+                Courses = db.Courses.Select(x=>new CourseViewModel{Id = x.Id, Name = x.Title, IsSelected = false}).ToList()
+            };
+            
+            return View(viewModel);
         }
 
         // POST: Instructor/Create
@@ -80,17 +85,24 @@ namespace MyUni.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,OfficeAssignmentId,FirstName,LastName,HireDate")] Instructor instructor)
+        public ActionResult Create(InstructorCreateViewModel instructorViewModel)
         {
             if (ModelState.IsValid)
             {
+                var instructor = new Instructor
+                {
+                    FirstName = instructorViewModel.FirstName,
+                    LastName = instructorViewModel.LastName,
+                    HireDate = instructorViewModel.HireDate,
+                    OfficeAssignment = string.IsNullOrEmpty(instructorViewModel.OfficeLocation) ? null : new OfficeAssignment { Location = instructorViewModel.OfficeLocation}
+                };
+
                 db.Instructors.Add(instructor);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Id = new SelectList(db.OfficeAssignments, "InstructorId", "Location", instructor.Id);
-            return View(instructor);
+            return View(instructorViewModel);
         }
 
         // GET: Instructor/Edit/5
@@ -101,14 +113,36 @@ namespace MyUni.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             
-            var instructor = db.Instructors.Include(x => x.OfficeAssignment).FirstOrDefault(x => x.Id == id);
+            var instructor = db.Instructors
+                .Include(x => x.OfficeAssignment)
+                .Include(x=>x.Courses)
+                .FirstOrDefault(x => x.Id == id);
 
             if (instructor == null)
             {
                 return HttpNotFound();
             }
+
+            var instructorCourses = instructor.Courses.ToList();
+
+            var coursesTaught = db.Courses.ToList().Select(x => new CourseViewModel
+            {
+                Id = x.Id,
+                Name = x.Title,
+                IsSelected = instructorCourses.Any(y => y.Title == x.Title)
+            }).ToList();
+
+            var viewModel = new InstructorViewModel
+            {
+                Id = instructor.Id,
+                FirstName = instructor.FirstName,
+                LastName = instructor.LastName,
+                HireDate = instructor.HireDate,
+                OfficeAssignmentId = instructor.OfficeAssignmentId,
+                Courses = coursesTaught
+            };
             
-            return View(instructor);
+            return View(viewModel);
         }
 
         // POST: Instructor/Edit/5
@@ -187,6 +221,28 @@ namespace MyUni.Web.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult CustomerList()
+        {
+            var customerList = new CustomerList
+            {
+                ListName = "Top Customers",
+                Customers = new List<Customer>
+                {
+                    new Customer {Id = 1, Name = "Cheranga", IsSelected = true},
+                    new Customer {Id = 2, Name = "Murali", IsSelected = false},
+                    new Customer {Id = 3, Name = "Van", IsSelected = false}
+                }
+            };
+
+            return View(customerList);
+        }
+
+        [HttpPost]
+        public ActionResult CustomerList(CustomerList customerList)
+        {
+            return View(customerList);
         }
     }
 }

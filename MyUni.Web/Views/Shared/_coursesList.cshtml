@@ -1,0 +1,18 @@
+﻿@model List<MyUni.Web.ViewModels.CourseViewModel>
+
+@if (Model != null && Model.Any())
+{
+    <ul>
+        @for (var index = 0; index < Model.Count(); index++)
+        {
+            var item = Model[index];
+
+            @Html.Hidden(string.Format("courses[{0}].Id", index), item.Id)
+            @Html.Hidden(string.Format("courses[{0}].Name", index), item.Name)
+
+
+            @Html.CheckBox(string.Format("courses[{0}].IsSelected", index), item.IsSelected)
+            @Html.Label(string.Format("courses[{0}].IsSelected", index), item.Name)
+        }
+    </ul>
+}

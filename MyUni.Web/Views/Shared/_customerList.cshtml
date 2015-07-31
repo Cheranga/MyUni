@@ -1,0 +1,16 @@
+﻿@model IList<MyUni.Web.ViewModels.Customer>
+
+@if (Model != null && Model.Any())
+{
+    for (int index = 0; index < Model.Count(); index++)
+    {
+        var item = Model[index];
+
+        @Html.Hidden(string.Format("customers[{0}].Id", index), item.Id)
+        @Html.Hidden(string.Format("customers[{0}].Name", index), item.Name)
+
+        @Html.CheckBox(string.Format("customers[{0}].IsSelected", index), item.IsSelected)
+        @Html.Label(string.Format("customers[{0}].IsSelected", index), item.Name)
+    }
+}
+

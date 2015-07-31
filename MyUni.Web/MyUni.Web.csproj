@@ -186,6 +186,8 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\InstructorCreateViewModel.cs" />
+    <Compile Include="ViewModels\InstructorListViewModel.cs" />
     <Compile Include="ViewModels\InstructorViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +264,9 @@
     <Content Include="Views\Instructor\Details.cshtml" />
     <Content Include="Views\Instructor\Edit.cshtml" />
     <Content Include="Views\Instructor\Index.cshtml" />
+    <Content Include="Views\Shared\_coursesList.cshtml" />
+    <Content Include="Views\Instructor\CustomerList.cshtml" />
+    <Content Include="Views\Shared\_customerList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

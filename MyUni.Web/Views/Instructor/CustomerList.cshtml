@@ -1,0 +1,17 @@
+﻿@using System.Web.UI.WebControls
+@model MyUni.Web.ViewModels.CustomerList
+@{
+    ViewBag.Title = "Customer";
+}
+
+<h2>Customer</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.DisplayFor(x=>x.ListName)
+    @Html.EditorFor(x=>x.ListName)
+    
+    Html.RenderPartial("_customerList", Model.Customers);
+    <button type="submit">Save</button>
+}
+
