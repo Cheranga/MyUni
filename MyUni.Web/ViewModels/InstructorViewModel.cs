@@ -24,9 +24,8 @@ namespace MyUni.Web.ViewModels
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime HireDate { get; set; }
 
-        public int? OfficeAssignmentId { get; set; }
+        public string Location { get; set; }
 
-        public List<SelectListItem> OfficeAssignments { get; set; }
         public List<CourseViewModel> Courses { get; set; }
         
     }
