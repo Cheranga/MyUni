@@ -68,6 +68,10 @@
     <Compile Include="Migrations\201507290616293_Complexdatamodel.Designer.cs">
       <DependentUpon>201507290616293_Complexdatamodel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508111025564_adding_rowversion_to_department.cs" />
+    <Compile Include="Migrations\201508111025564_adding_rowversion_to_department.Designer.cs">
+      <DependentUpon>201508111025564_adding_rowversion_to_department.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MyUniDataInitializer.cs" />
     <Compile Include="MyUniDbContext.cs" />
@@ -92,6 +96,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507290616293_Complexdatamodel.resx">
       <DependentUpon>201507290616293_Complexdatamodel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508111025564_adding_rowversion_to_department.resx">
+      <DependentUpon>201508111025564_adding_rowversion_to_department.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

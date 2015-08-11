@@ -15,5 +15,7 @@ namespace MyUni.Business
         public Instructor Administrator { get; set; }
         public ICollection<Course> Courses { get; set; }
 
+        public byte[] RowVersion { get; set; }
+
     }
 }

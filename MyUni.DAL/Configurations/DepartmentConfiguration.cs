@@ -11,6 +11,11 @@ namespace MyUni.DAL.Configurations
 
             this.Property(x => x.StartDate).HasColumnType("datetime2");
 
+            //
+            // Setting concurrency
+            //
+            this.Property(x => x.RowVersion).IsConcurrencyToken();
+
         }
     }
 }
