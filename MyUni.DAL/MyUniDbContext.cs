@@ -20,12 +20,12 @@ namespace MyUni.DAL
         //
         // http://stackoverflow.com/questions/24974218/scaffolding-controller-doesnt-work-with-visual-studio-2013-update-3-and-4
         //
-        public IDbSet<Student> Students { get; set; }
-        public IDbSet<Course> Courses { get; set; }
-        public IDbSet<Enrollment> Enrollments { get; set; }
-        public IDbSet<Instructor> Instructors { get; set; }
-        public IDbSet<OfficeAssignment> OfficeAssignments { get; set; }
-        public IDbSet<Department> Departments { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Instructor> Instructors { get; set; }
+        public DbSet<OfficeAssignment> OfficeAssignments { get; set; }
+        public DbSet<Department> Departments { get; set; }
 
         public static string MyUniConnectionString
         {

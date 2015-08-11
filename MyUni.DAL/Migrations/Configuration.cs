@@ -67,11 +67,11 @@ namespace MyUni.DAL.Migrations
         private void SeedDepartments(MyUniDbContext context)
         {
             context.Departments.AddOrUpdate(x=>x.Name,
-                new Department { Name = "Microsoft",Budget = 5000000, Administrator = context.Instructors.FirstOrDefault(x=>x.LastName == "Gates"),StartDate = DateTime.Now.AddYears(-40)},
-                new Department { Name = "Career Development", Budget = 1000000, Administrator = context.Instructors.FirstOrDefault(x => x.FirstName == "Mr. Career"), StartDate = DateTime.Now.AddYears(-40) },
-                new Department { Name = "Client Technologies", Budget = 1000000},
-                new Department { Name = "Databases", Budget = 1000000},
-                new Department { Name = "Web Services", Budget = 1000000}
+                new Department { Name = "Microsoft",Budget = 5000000, Administrator = context.Instructors.FirstOrDefault(x=>x.LastName == "Gates"),StartDate = DateTime.Now.AddYears(-40), RowVersion = Guid.NewGuid().ToByteArray()},
+                new Department { Name = "Career Development", Budget = 1000000, Administrator = context.Instructors.FirstOrDefault(x => x.FirstName == "Mr. Career"), StartDate = DateTime.Now.AddYears(-40), RowVersion = Guid.NewGuid().ToByteArray() },
+                new Department { Name = "Client Technologies", Budget = 1000000, RowVersion = Guid.NewGuid().ToByteArray() },
+                new Department { Name = "Databases", Budget = 1000000, RowVersion = Guid.NewGuid().ToByteArray() },
+                new Department { Name = "Web Services", Budget = 1000000, RowVersion = Guid.NewGuid().ToByteArray() }
                 );
 
             context.SaveChanges();
