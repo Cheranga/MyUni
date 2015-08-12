@@ -13,7 +13,11 @@ namespace MyUni.Web.Controllers
 {
     public class StudentsController : Controller
     {
-        private MyUniDbContext db = new MyUniDbContext();
+        private MyUniDbContext db;
+        public StudentsController(MyUniDbContext dbContext)
+        {
+            this.db = dbContext;
+        }
 
         // GET: Students
         public ActionResult Index()

@@ -72,3 +72,23 @@ Then when you call SaveChanges, the Entity Framework updates all columns of the 
 If you want the SQL Update statement to update only the fields that the user actually changed, you can save the original values in some way (such as hidden fields) so that they are available when the HttpPost Edit method is called. 
 Then you can create a Student entity using the original values, call the Attach method with that original version of the entity, update the entity's values to the new values, and then call SaveChanges.
 For more information, see Entity states and SaveChanges and Local Data in the MSDN Data Developer Center.
+
+
+DI with Ninject
+---------------
+1.	Use Nuget, and install
+	1.1	Ninject MVC 5
+	1.2	Ninject integration for web api2
+
+2.	Create a custom dependency resolver class inheriting from "NijectScope" and which implements both IDependencyResolver interface (System.Web.Mvc and System.Web.Http).
+	The reason to implement both interfaces are to use this dependency resolver in both MVC and in Web Api.
+
+3.	In "NinjectWebCommon.cs" modify the "RegisterServices" as shown below.
+
+	 private static void RegisterServices(IKernel kernel)
+        {
+            var appDependencyResolver = new MyUniDependencyResolver(kernel);
+            GlobalConfiguration.Configuration.DependencyResolver = appDependencyResolver;
+        }  
+
+	The above code will register the created custom dependency resolver as the application's dependency resolver.
