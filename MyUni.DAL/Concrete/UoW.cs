@@ -30,44 +30,44 @@ namespace MyUni.DAL.Concrete
             Debug.WriteLine("UoW created...");
         }
 
-        public virtual IRepository<T> GetRepository<T>() where T:class, IModel
+        public virtual IRepository<T> GetRepository<T>() where T : class, IModel
         {
             return this.repositoryFactory.GetRepository<T>();
         }
 
-        public virtual IDataResult Commit( Action action = null  )
+        public virtual IDataResult Commit(Action action = null)
         {
-            using (var transaction = this.Context.Database.BeginTransaction())
+            //using (var transaction = this.Context.Database.BeginTransaction())
+            //{
+            try
             {
-                try
+                if (action != null)
                 {
-                    if (action != null)
-                    {
-                        action();
-                    }
-
-                    this.Context.SaveChanges();
-                    transaction.Commit();
-
-                    var dataResult = new DataResult
-                    {
-                        Status = true
-                    };
-
-                    return dataResult;
+                    action();
                 }
-                catch (Exception exception)
+
+                this.Context.SaveChanges();
+                //transaction.Commit();
+
+                var dataResult = new DataResult
                 {
-                    transaction.Rollback();
+                    Status = true
+                };
 
-                    var dataResult = new DataResult
-                    {
-                        Exception = exception
-                    };
-
-                    return dataResult;
-                }
+                return dataResult;
             }
+            catch (Exception exception)
+            {
+                //transaction.Rollback();
+
+                var dataResult = new DataResult
+                {
+                    Exception = exception
+                };
+
+                return dataResult;
+            }
+            //}
         }
 
         //public virtual T Commit<T>(Func<T> action) where T:class 

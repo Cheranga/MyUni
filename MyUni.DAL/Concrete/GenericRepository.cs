@@ -10,7 +10,7 @@ namespace MyUni.DAL.Concrete
     {
         public readonly DbContext Context;
 
-        private readonly DbSet<T> dbSet = null; 
+        protected readonly DbSet<T> dbSet = null; 
 
         public GenericRepository(DbContext context)
         {
@@ -30,17 +30,17 @@ namespace MyUni.DAL.Concrete
         }
 
 
-        public T GetById(int id)
+        public virtual T GetById(int id)
         {
             return this.dbSet.Find(id);
         }
 
-        public IQueryable<T> GetAll()
+        public virtual IQueryable<T> GetAll()
         {
             return this.dbSet;
         }
 
-        public T Add(T entity)
+        public virtual T Add(T entity)
         {
             if (entity == null)
             {
@@ -51,7 +51,7 @@ namespace MyUni.DAL.Concrete
             return addedEntity;
         }
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             if (entity == null)
             {
@@ -67,13 +67,13 @@ namespace MyUni.DAL.Concrete
             dbEntity.State = EntityState.Deleted;
         }
 
-        public void Delete(int id)
+        public virtual void Delete(int id)
         {
             var entity = this.GetById(id);
             this.Delete(entity);
         }
 
-        public void Update(T entity)
+        public virtual void Update(T entity)
         {
             if (entity == null)
             {
@@ -87,6 +87,23 @@ namespace MyUni.DAL.Concrete
             }
 
             dbEntity.State = EntityState.Modified;
+        }
+    }
+
+    public class CourseRepository : GenericRepository<Course>
+    {
+        public CourseRepository(DbContext context) : base(context)
+        {
+        }
+
+        public override IQueryable<Course> GetAll()
+        {
+            return this.dbSet.Include(x => x.Department);
+        }
+
+        public override Course GetById(int id)
+        {
+            return this.dbSet.Where(x => x.Id == id).Include(x => x.Department).FirstOrDefault();
         }
     }
 }

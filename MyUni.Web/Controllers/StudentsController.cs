@@ -14,7 +14,6 @@ namespace MyUni.Web.Controllers
 {
     public class StudentsController : MyUniBaseController
     {
-        // GET: Students
         public StudentsController(IUoW uow)
             : base(uow)
         {
@@ -31,7 +30,6 @@ namespace MyUni.Web.Controllers
             return View(repository.GetAll().ToList());
         }
 
-        // GET: Students/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -54,13 +52,12 @@ namespace MyUni.Web.Controllers
             return View(student);
         }
 
-        // GET: Students/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Students/Create
+        //
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -92,7 +89,6 @@ namespace MyUni.Web.Controllers
             return View(student);
         }
 
-        // GET: Students/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -115,7 +111,7 @@ namespace MyUni.Web.Controllers
             return View(student);
         }
 
-        // POST: Students/Edit/5
+        //
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
@@ -154,7 +150,6 @@ namespace MyUni.Web.Controllers
 
         }
 
-        // GET: Students/Delete/5
         public ActionResult Delete(int? id, bool showError = false)
         {
             if (id == null)
@@ -181,7 +176,6 @@ namespace MyUni.Web.Controllers
             return View(student);
         }
 
-        // POST: Students/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id)
@@ -212,14 +206,5 @@ namespace MyUni.Web.Controllers
                 return RedirectToAction("Delete", new { id, showError = true });
             }
         }
-
-        //protected override void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        db.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
     }
 }

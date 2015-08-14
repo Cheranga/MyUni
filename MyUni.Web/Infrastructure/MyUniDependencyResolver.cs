@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Http.Dependencies;
+using MyUni.Business;
 using MyUni.DAL;
 using MyUni.DAL.Concrete;
 using Ninject;
@@ -28,7 +29,21 @@ namespace MyUni.Web.Infrastructure
         private void RegisterDependencies()
         {
             this.kernel.Bind<DbContext>().To<MyUniDbContext>().InRequestScope();
-            this.kernel.Bind<IRepositoryFactory>().To<RepositoryFactory>().InRequestScope();
+
+            this.kernel.Bind<IRepositoryFactory>().ToMethod(x =>
+            {
+                var dbContext = this.kernel.Get<DbContext>();
+                var repositoryFactory = new RepositoryFactory(dbContext);
+
+                //
+                // Set the specialized repositories
+                //
+                repositoryFactory.SetCustomRepo(new CourseRepository(dbContext));
+
+                return repositoryFactory;
+
+            }).InRequestScope();
+
             this.kernel.Bind<IUoW>().To<UoW>().InRequestScope();
         }
 
