@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace MyUni.Business
 {
-    public class Department
+    public class Department : IModel
     {
         public int Id { get; set; }
         public int? AdministratorId { get; set; }

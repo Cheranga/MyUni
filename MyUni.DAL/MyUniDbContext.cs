@@ -39,6 +39,7 @@ namespace MyUni.DAL
         public MyUniDbContext()
             : base(MyUniConnectionString)
         {
+            Debug.WriteLine("MyUniDbContext created...");
             //
             // Disable lazy loading
             //

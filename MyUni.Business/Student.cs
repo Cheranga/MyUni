@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyUni.Business
 {
-    public class Student
+    public class Student : IModel
     {
         public int Id { get; set; }
 
