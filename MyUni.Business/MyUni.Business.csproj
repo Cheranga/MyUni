@@ -44,6 +44,7 @@
     <Compile Include="Department.cs" />
     <Compile Include="Enrollment.cs" />
     <Compile Include="Grade.cs" />
+    <Compile Include="IModel.cs" />
     <Compile Include="Instructor.cs" />
     <Compile Include="OfficeAssignment.cs" />
     <Compile Include="Student.cs" />

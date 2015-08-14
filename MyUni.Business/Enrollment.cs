@@ -1,6 +1,6 @@
 namespace MyUni.Business
 {
-    public class Enrollment
+    public class Enrollment : IModel
     {
         public int Id { get; set; }
         public Grade? Grade { get; set; }

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyUni.Business
 {
-    public class Instructor
+    public class Instructor : IModel
     {
         public int Id { get; set; }
         public int? OfficeAssignmentId { get; set; }

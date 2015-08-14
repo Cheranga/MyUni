@@ -50,6 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IRepository.cs" />
+    <Compile Include="Abstract\IRepositoryFactory.cs" />
+    <Compile Include="Abstract\IUoW.cs" />
+    <Compile Include="Concrete\GenericRepository.cs" />
+    <Compile Include="Concrete\RepositoryFactory.cs" />
+    <Compile Include="Concrete\UoW.cs" />
     <Compile Include="Configurations\CourseConfiguration.cs" />
     <Compile Include="Configurations\DepartmentConfiguration.cs" />
     <Compile Include="Configurations\EnrollmentConfiguration.cs" />

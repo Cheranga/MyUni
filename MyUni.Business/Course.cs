@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace MyUni.Business
 {
-    public class Course
+    public class Course : IModel
     {
         public int Id { get; set; }
         public int DepartmentId { get; set; }
