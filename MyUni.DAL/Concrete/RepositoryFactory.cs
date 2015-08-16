@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Diagnostics;
 using MyUni.Business;
 using MyUni.DAL.Abstract;
+using Ninject;
 using StageDocs.DAL.Abstract;
 
 namespace MyUni.DAL.Concrete
@@ -12,6 +13,7 @@ namespace MyUni.DAL.Concrete
     {
         private readonly DbContext context;
 
+        [Inject]
         public Dictionary<Type, object> CustomRepositoriesMappedByType { get; set; }
 
         public RepositoryFactory(DbContext context)

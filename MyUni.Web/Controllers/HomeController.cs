@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -25,6 +26,13 @@ namespace MyUni.Web.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        public async Task<ActionResult> GetTestData()
+        {
+            await Task.Delay(5000).ConfigureAwait(false);
+
+            return Json(new {Name = "Cheranga Hatangala"}, JsonRequestBehavior.AllowGet);
         }
     }
 }

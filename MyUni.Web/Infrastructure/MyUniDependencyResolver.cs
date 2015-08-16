@@ -6,8 +6,10 @@ using System.Web;
 using System.Web.Http.Dependencies;
 using MyUni.Business;
 using MyUni.DAL;
+using MyUni.DAL.Abstract;
 using MyUni.DAL.Concrete;
 using Ninject;
+using Ninject.Parameters;
 using Ninject.Syntax;
 using Ninject.Web.Common;
 using Ninject.Web.WebApi;
@@ -28,23 +30,34 @@ namespace MyUni.Web.Infrastructure
 
         private void RegisterDependencies()
         {
+            //
+            // Db Context
+            //
             this.kernel.Bind<DbContext>().To<MyUniDbContext>().InRequestScope();
-
-            this.kernel.Bind<IRepositoryFactory>().ToMethod(x =>
+            //
+            // Repository factory
+            //
+            this.kernel.Bind<IRepositoryFactory>().To<RepositoryFactory>().InRequestScope();
+            //
+            // Custom repositories
+            //
+            this.kernel.Bind<Dictionary<Type, object>>().ToMethod(x =>
             {
                 var dbContext = this.kernel.Get<DbContext>();
-                var repositoryFactory = new RepositoryFactory(dbContext);
 
-                //
-                // Set the specialized repositories
-                //
-                repositoryFactory.SetCustomRepo(new CourseRepository(dbContext));
+                return new Dictionary<Type, object>
+                {
+                    //{typeof (Course), new CourseRepository(dbContext)},
+                    {typeof (Instructor), new InstructorRepository(dbContext)}
+                };
+            }).WhenInjectedInto<IRepositoryFactory>().InRequestScope();
 
-                return repositoryFactory;
+            this.kernel.Bind<IUoW>().To<UoW>().InRequestScope(); //.WithParameter(new Parameter("UoW", (c,t)=>c.Kernel.Get<IUoW>(), false));
 
-            }).InRequestScope();
-
-            this.kernel.Bind<IUoW>().To<UoW>().InRequestScope();
+            this.kernel.Bind(typeof (GenericRepository<>))
+                .To(typeof (GenericRepository<>))
+                .InRequestScope()
+                .WithPropertyValue("UoW", x => x.Kernel.Get<IUoW>());
         }
 
         public IDependencyScope BeginScope()

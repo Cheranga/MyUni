@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Diagnostics;
+using System.Linq;
+using System.Linq.Expressions;
 using MyUni.Business;
 using MyUni.DAL.Abstract;
 using StageDocs.DAL.Abstract;
@@ -32,7 +34,17 @@ namespace MyUni.DAL.Concrete
 
         public virtual IRepository<T> GetRepository<T>() where T : class, IModel
         {
-            return this.repositoryFactory.GetRepository<T>();
+            var repository = this.repositoryFactory.GetRepository<T>();
+            
+            //
+            // If there's no uow set, set the uow as the current instance
+            //
+            if (repository != null)
+            {
+                repository.UoW = repository.UoW ?? this;
+            }
+
+            return repository;
         }
 
         public virtual IDataResult Commit(Action action = null)
@@ -68,6 +80,25 @@ namespace MyUni.DAL.Concrete
                 return dataResult;
             }
             //}
+        }
+
+        public IQueryable<T> Get<T>() where T : class, IModel
+        {
+            var repository = this.GetRepository<T>();
+
+            return repository == null ? null : repository.GetAll();
+        }
+
+        public IQueryable<T> Get<T>(Expression<Func<T, bool>> filter) where T:class, IModel
+        {
+            if (filter == null)
+            {
+                return null;
+            }
+
+            var results = this.Get<T>();
+
+            return results == null ? null : results.Where(filter);
         }
 
         //public virtual T Commit<T>(Func<T> action) where T:class 

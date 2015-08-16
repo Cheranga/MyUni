@@ -21,14 +21,14 @@ namespace MyUni.Web.Controllers
 
         public ActionResult Index()
         {
-            var repository = this.GetRepository<Course>();
+            var courses = this.UoW.Get<Course>();
 
-            if (repository == null)
+            if (courses == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
-            return View(repository.GetAll().ToList());
+            return View(courses.ToList());
         }
 
         public ActionResult Details(int? id)
@@ -38,19 +38,14 @@ namespace MyUni.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var repository = this.GetRepository<Course>();
+            var course = this.UoW.Get<Course>(x => x.Id == id);
 
-            if (repository == null)
+            if (course == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
-
-            Course course = repository.GetById(id.Value);
-            if (course == null)
-            {
-                return HttpNotFound();
-            }
-            return View(course);
+            
+            return View(course.FirstOrDefault());
         }
 
         public ActionResult Create()
@@ -97,20 +92,17 @@ namespace MyUni.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var repository = this.GetRepository<Course>();
+            var course = this.UoW.Get<Course>(x=>x.Id == id);
 
-            if (repository == null)
+            if (course == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
-            var course = repository.GetById(id.Value);
-            if (course == null)
-            {
-                return HttpNotFound();
-            }
-            PopulateDepartments(id);
-            return View(course);
+            var requiredCourse = course.FirstOrDefault();
+
+            PopulateDepartments(requiredCourse == null ? -1 : requiredCourse.DepartmentId);
+            return View(course.FirstOrDefault());
         }
 
         // POST: Course/Edit/5
@@ -142,25 +134,19 @@ namespace MyUni.Web.Controllers
         // GET: Course/Delete/5
         public ActionResult Delete(int? id)
         {
-            var repository = this.GetRepository<Course>();
-
-            if (repository == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-            }
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var course = repository.GetById(id.Value);
+            var course = this.UoW.Get<Course>(x => x.Id == id);
 
             if (course == null)
             {
                 return HttpNotFound();
             }
-            return View(course);
+
+            return View(course.FirstOrDefault());
         }
 
         [HttpPost, ActionName("Delete")]
@@ -186,7 +172,7 @@ namespace MyUni.Web.Controllers
 
         private void PopulateDepartments(int? id)
         {
-            var repository = this.GetRepository<Course>();
+            var repository = this.GetRepository<Department>();
 
             if (repository == null)
             {
@@ -194,8 +180,8 @@ namespace MyUni.Web.Controllers
             }
             
             var departments = repository.GetAll()
-                .OrderBy(x=>x.Title)
-                .Select(x => new SelectListItem { Text = x.Title, Value = x.Id.ToString() });
+                .OrderBy(x=>x.Name)
+                .Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
 
             ViewBag.DepartmentId = new SelectList(departments, "Value", "Text", id);
         }

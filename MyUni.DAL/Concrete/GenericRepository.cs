@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using MyUni.Business;
 using MyUni.DAL.Abstract;
+using Ninject;
+using StageDocs.DAL.Abstract;
 
 namespace MyUni.DAL.Concrete
 {
@@ -11,6 +14,8 @@ namespace MyUni.DAL.Concrete
         public readonly DbContext Context;
 
         protected readonly DbSet<T> dbSet = null; 
+
+        public IUoW UoW { get; set; }
 
         public GenericRepository(DbContext context)
         {
@@ -87,23 +92,28 @@ namespace MyUni.DAL.Concrete
             }
 
             dbEntity.State = EntityState.Modified;
-        }
-    }
 
-    public class CourseRepository : GenericRepository<Course>
-    {
-        public CourseRepository(DbContext context) : base(context)
-        {
+            
         }
 
-        public override IQueryable<Course> GetAll()
+        public IQueryable<T> Get(Func<T, bool> filter)
         {
-            return this.dbSet.Include(x => x.Department);
+            if (filter == null)
+            {
+                return null;
+            }
+
+            return this.dbSet.Where(filter).AsQueryable();
         }
 
-        public override Course GetById(int id)
+        public virtual IQueryable<T> Include<TProperty>(Expression<Func<T, TProperty>> filter)
         {
-            return this.dbSet.Where(x => x.Id == id).Include(x => x.Department).FirstOrDefault();
+            if (filter == null)
+            {
+                return null;
+            }
+
+            return this.dbSet.Include(filter);
         }
     }
 }

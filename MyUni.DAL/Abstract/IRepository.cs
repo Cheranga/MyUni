@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using MyUni.Business;
+using StageDocs.DAL.Abstract;
 
 namespace MyUni.DAL.Abstract
 {
@@ -16,5 +17,7 @@ namespace MyUni.DAL.Abstract
         void Delete(int id);
 
         void Update(T entity);
+
+        IUoW UoW { get; set; }
     }
 }

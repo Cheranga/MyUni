@@ -8,28 +8,36 @@ using System.Web;
 using System.Web.Mvc;
 using MyUni.Business;
 using MyUni.DAL;
+using MyUni.DAL.Concrete;
 using MyUni.Web.ViewModels;
+using StageDocs.DAL.Abstract;
 using WebGrease.Css.Extensions;
 
 namespace MyUni.Web.Controllers
 {
-    public class InstructorController : Controller
+    public class InstructorController : MyUniBaseController//Controller
     {
-        private MyUniDbContext db = new MyUniDbContext();
+        public InstructorController(IUoW uow)
+            : base(uow)
+        {
+        }
 
-        // GET: Instructor
         public ActionResult Index(int? id, int? courseId)
         {
-            //var instructors = db.Instructors.Include(i => i.OfficeAssignment);
-            //return View(instructors.ToList());
+            var instructors = this.UoW.Get<Instructor>();
+            if (instructors == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+
+            instructors = instructors
+                .Include(x => x.OfficeAssignment)
+                .Include(x => x.Courses.Select(y => y.Department))
+                .Include(x => x.Courses.Select(y => y.Enrollments.Select(z => z.Student)));
 
             var viewModel = new InstructorListViewModel
             {
-                Instructors = db.Instructors
-                    .Include(x => x.OfficeAssignment)
-                    .Include(x => x.Courses.Select(y => y.Department))
-                    .Include(x => x.Courses.Select(y => y.Enrollments.Select(z => z.Student)))
-                    .OrderBy(x => x.FirstName)
+                Instructors = instructors.OrderBy(x => x.FirstName)
             };
 
             if (id.HasValue)
@@ -61,7 +69,14 @@ namespace MyUni.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Instructor instructor = db.Instructors.Find(id);
+
+            var repository = this.UoW.GetRepository<Instructor>();
+            if (repository == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+
+            var instructor = repository.GetById(id.Value);
             if (instructor == null)
             {
                 return HttpNotFound();
@@ -72,10 +87,16 @@ namespace MyUni.Web.Controllers
         // GET: Instructor/Create
         public ActionResult Create()
         {
+            var repository = this.UoW.GetRepository<Course>();
+            if (repository == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+
             var viewModel = new InstructorViewModel
             {
                 HireDate = DateTime.Now,
-                Courses = db.Courses.Select(x => new CourseViewModel { Id = x.Id, Name = x.Title, IsSelected = false }).ToList()
+                Courses = repository.GetAll().Select(x => new CourseViewModel { Id = x.Id, Name = x.Title, IsSelected = false }).ToList()
             };
 
             return View(viewModel);
@@ -88,6 +109,13 @@ namespace MyUni.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(InstructorViewModel instructorViewModel)
         {
+
+            var repository = this.UoW.GetRepository<Instructor>();
+            if (repository == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+
             if (ModelState.IsValid)
             {
                 //
@@ -104,14 +132,18 @@ namespace MyUni.Web.Controllers
                     OfficeAssignment = officeAssignment,
                     Courses = instructorViewModel.Courses.Where(x => x.IsSelected).Select(x => new Course { Id = x.Id }).ToList()
                 };
-                //
-                // Since this is a new entity (parent entity), the courses (the child entities) will also be considered as new entities. To avoid adding new courses, need to inform EF, that the course entities state is "Unchanged"
-                //
-                var trackedInstructorEntity = db.Entry(instructor);
-                trackedInstructorEntity.State = EntityState.Added;
-                trackedInstructorEntity.Entity.Courses.ForEach(x => db.Entry(x).State = EntityState.Unchanged);
 
-                db.SaveChanges();
+                this.UoW.Commit(() =>
+                {
+                    repository.Add(instructor);
+                    ////
+                    //// Since this is a new entity (parent entity), the courses (the child entities) will also be considered as new entities. To avoid adding new courses, need to inform EF, that the course entities state is "Unchanged"
+                    ////
+                    //var trackedInstructorEntity = this.UoW.conte.Entry(instructor);
+                    //trackedInstructorEntity.State = EntityState.Added;
+                    //trackedInstructorEntity.Entity.Courses.ForEach(x => db.Entry(x).State = EntityState.Unchanged);
+                });
+
                 return RedirectToAction("Index");
             }
 
@@ -126,10 +158,21 @@ namespace MyUni.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var instructor = db.Instructors
+            var instructors = this.UoW.Get<Instructor>();
+            if (instructors == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+
+            var instructor = instructors
                 .Include(x => x.OfficeAssignment)
                 .Include(x => x.Courses)
                 .FirstOrDefault(x => x.Id == id);
+
+            //var instructor = db.Instructors
+            //    .Include(x => x.OfficeAssignment)
+            //    .Include(x => x.Courses)
+            //    .FirstOrDefault(x => x.Id == id);
 
             if (instructor == null)
             {
@@ -138,12 +181,22 @@ namespace MyUni.Web.Controllers
 
             var instructorCourses = instructor.Courses.ToList();
 
-            var coursesTaught = db.Courses.ToList().Select(x => new CourseViewModel
-            {
-                Id = x.Id,
-                Name = x.Title,
-                IsSelected = instructorCourses.Any(y => y.Title == x.Title)
-            }).ToList();
+            var coursesTaught = this.UoW.Get<Course>()
+                .ToList()
+                .Select(x => new CourseViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Title,
+                    IsSelected = instructorCourses.Any(y => y.Title == x.Title)
+                })
+                .ToList();
+
+            //var coursesTaught = db.Courses.ToList().Select(x => new CourseViewModel
+            //{
+            //    Id = x.Id,
+            //    Name = x.Title,
+            //    IsSelected = instructorCourses.Any(y => y.Title == x.Title)
+            //}).ToList();
 
             var viewModel = new InstructorViewModel
             {
@@ -171,10 +224,16 @@ namespace MyUni.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var instructorToUpdate = db.Instructors
+            var instructors = this.UoW.Get<Instructor>(x => x.Id == id);
+            if (instructors == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+
+            var instructorToUpdate = instructors
                 .Include(x => x.OfficeAssignment)
                 .Include(x => x.Courses)
-                .FirstOrDefault(x => x.Id == id);
+                .FirstOrDefault();
 
             if (instructorToUpdate == null)
             {
@@ -185,49 +244,81 @@ namespace MyUni.Web.Controllers
 
             try
             {
-                if (TryUpdateModel(instructorViewModel, new[] { "FirstName", "LastName", "HireDate", "Location", "Courses" }))
+                if (TryUpdateModel(instructorViewModel, new[] { "Id", "FirstName", "LastName", "HireDate", "Location", "Courses" }))
                 {
-                    var instructorDbEntity = db.Entry(instructorToUpdate);
-
-                    var instructorEntity = instructorDbEntity.Entity;
-                    instructorEntity.FirstName = instructorViewModel.FirstName;
-                    instructorEntity.LastName = instructorViewModel.LastName;
-                    instructorEntity.HireDate = instructorViewModel.HireDate;
-                    instructorEntity.Courses.Clear();
-
-                    if (instructorViewModel.Courses != null)
+                    var updatedInstructor = new Instructor
                     {
-                        instructorViewModel.Courses.Where(x => x.IsSelected)
-                            .ForEach(x => instructorEntity.Courses.Add(db.Courses.Find(x.Id)));
-                    }
+                        Id = instructorViewModel.Id,
+                        FirstName = instructorViewModel.FirstName,
+                        LastName = instructorViewModel.LastName,
+                        HireDate = instructorViewModel.HireDate,
+                        Courses =
+                            instructorViewModel.Courses == null
+                                ? new List<Course>()
+                                : instructorViewModel.Courses.Where(x => x.IsSelected)
+                                    .Select(x => new Course { Id = x.Id })
+                                    .ToList(),
 
-                    if (string.IsNullOrEmpty(instructorViewModel.Location))
-                    {
-                        var currentOfficeAssignment = db.OfficeAssignments.FirstOrDefault(x => x.InstructorId == instructorToUpdate.Id);
-
-                        if (currentOfficeAssignment != null)
-                        {
-                            db.Entry(currentOfficeAssignment).State = EntityState.Deleted;
-                        }
-                    }
-                    else
-                    {
-                        if (instructorEntity.OfficeAssignment == null)
-                        {
-                            instructorEntity.OfficeAssignment = new OfficeAssignment
+                        OfficeAssignment =
+                            new OfficeAssignment
                             {
+                                InstructorId = instructorViewModel.Id,
                                 Location = instructorViewModel.Location
-                            };
-                        }
-                        else
+                            }
+                    };
+
+                    this.UoW.Commit(() =>
+                    {
+                        var repository = this.UoW.GetRepository<Instructor>();
+                        if (repository != null)
                         {
-                            instructorEntity.OfficeAssignment.Location = instructorViewModel.Location;
+                            repository.Update(updatedInstructor);
                         }
+                    });
 
-                    }
 
-                    instructorDbEntity.State = EntityState.Modified;
-                    db.SaveChanges();
+                    //var instructorDbEntity = db.Entry(instructorToUpdate);
+
+                    //var instructorEntity = instructorDbEntity.Entity;
+                    //instructorEntity.FirstName = instructorViewModel.FirstName;
+                    //instructorEntity.LastName = instructorViewModel.LastName;
+                    //instructorEntity.HireDate = instructorViewModel.HireDate;
+                    //instructorEntity.Courses.Clear();
+
+                    //if (instructorViewModel.Courses != null)
+                    //{
+                    //    instructorViewModel.Courses.Where(x => x.IsSelected)
+                    //        .ForEach(x => instructorEntity.Courses.Add(db.Courses.Find(x.Id)));
+                    //}
+
+                    //if (string.IsNullOrEmpty(instructorViewModel.Location))
+                    //{
+                    //    var currentOfficeAssignment = db.OfficeAssignments.FirstOrDefault(x => x.InstructorId == instructorToUpdate.Id);
+
+                    //    if (currentOfficeAssignment != null)
+                    //    {
+                    //        db.Entry(currentOfficeAssignment).State = EntityState.Deleted;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    if (instructorEntity.OfficeAssignment == null)
+                    //    {
+                    //        instructorEntity.OfficeAssignment = new OfficeAssignment
+                    //        {
+                    //            Location = instructorViewModel.Location
+                    //        };
+                    //    }
+                    //    else
+                    //    {
+                    //        instructorEntity.OfficeAssignment.Location = instructorViewModel.Location;
+                    //    }
+
+                    //}
+
+                    //instructorDbEntity.State = EntityState.Modified;
+                    //db.SaveChanges();
+
                     return RedirectToAction("Index");
                 }
             }
@@ -249,7 +340,9 @@ namespace MyUni.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Instructor instructor = db.Instructors.Find(id);
+
+            var instructor = this.UoW.Get<Instructor>(x => x.Id == id).FirstOrDefault();
+
             if (instructor == null)
             {
                 return HttpNotFound();
@@ -262,20 +355,34 @@ namespace MyUni.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Instructor instructor = db.Instructors.Find(id);
-            db.Instructors.Remove(instructor);
-            db.SaveChanges();
+            this.UoW.Commit(() =>
+            {
+                var repository = this.UoW.GetRepository<Instructor>();
+                if (repository != null)
+                {
+                    repository.Delete(id);
+                }
+            });
+
+            //var instructor = this.UoW.Get<Instructor>(x => x.Id == id).FirstOrDefault();
+
+            //if (instructor == null)
+            //{
+            //    return HttpNotFound();
+            //}
+            //db.Instructors.Remove(instructor);
+            //db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
 
         public ActionResult CustomerList()
         {
