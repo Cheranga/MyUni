@@ -35,8 +35,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -84,6 +91,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAL\GenericRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
   </ItemGroup>
@@ -94,6 +102,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MyUni.Business\MyUni.Business.csproj">
+      <Project>{DE93C21A-BE0C-4A51-A4DE-B673140E82D9}</Project>
+      <Name>MyUni.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyUni.DAL\MyUni.DAL.csproj">
+      <Project>{339ED7B6-8E86-4307-8205-8025DF3B387D}</Project>
+      <Name>MyUni.DAL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MyUni.Web\MyUni.Web.csproj">
       <Project>{5C999E30-229C-45FB-BF7A-89155007B52C}</Project>
       <Name>MyUni.Web</Name>

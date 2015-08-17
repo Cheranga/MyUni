@@ -20,12 +20,12 @@ namespace MyUni.DAL
         //
         // http://stackoverflow.com/questions/24974218/scaffolding-controller-doesnt-work-with-visual-studio-2013-update-3-and-4
         //
-        public DbSet<Student> Students { get; set; }
-        public DbSet<Course> Courses { get; set; }
-        public DbSet<Enrollment> Enrollments { get; set; }
-        public DbSet<Instructor> Instructors { get; set; }
-        public DbSet<OfficeAssignment> OfficeAssignments { get; set; }
-        public DbSet<Department> Departments { get; set; }
+        public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<Course> Courses { get; set; }
+        public virtual DbSet<Enrollment> Enrollments { get; set; }
+        public virtual DbSet<Instructor> Instructors { get; set; }
+        public virtual DbSet<OfficeAssignment> OfficeAssignments { get; set; }
+        public virtual DbSet<Department> Departments { get; set; }
 
         public static string MyUniConnectionString
         {
@@ -36,7 +36,7 @@ namespace MyUni.DAL
             }
         }
 
-        public MyUniDbContext()
+        public MyUniDbContext(string connectionString)
             : base(MyUniConnectionString)
         {
             Debug.WriteLine("MyUniDbContext created...");
@@ -51,6 +51,11 @@ namespace MyUni.DAL
 #if DEBUG
             this.Database.Log = (x) => Debug.WriteLine(x);
 #endif
+        }
+
+        public MyUniDbContext()
+        {
+            
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
