@@ -96,7 +96,7 @@ namespace MyUni.DAL.Concrete
             
         }
 
-        public IQueryable<T> Get(Func<T, bool> filter)
+        public virtual IQueryable<T> Get(Func<T, bool> filter)
         {
             if (filter == null)
             {
