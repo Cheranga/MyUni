@@ -38,7 +38,7 @@ namespace MyUni.Web.Tests.DAL
 
             return mockedStudentDbSet;
         }
-
+        
         private DbContext GetMyUniDbContext(List<Student> students )
         {
             students = students ?? new List<Student>();
@@ -56,10 +56,9 @@ namespace MyUni.Web.Tests.DAL
         {
             var students = GetStudentList();
             var context = GetMyUniDbContext(students);
-            var repository = new Mock<GenericRepository<Student>>(context);
-            repository.Setup(x => x.GetAll()).Returns(students.AsQueryable());
+            var repository = new GenericRepository<Student>(context);
 
-            var list = repository.Object.GetAll();
+            var list = repository.GetAll();
 
             Assert.IsNotNull(list);
             Assert.AreEqual(3, list.Count());
@@ -73,16 +72,30 @@ namespace MyUni.Web.Tests.DAL
             // Arrange
             //
             var studentList = GetStudentList();
-            var context = GetMyUniDbContext(studentList);
-            var mockedRepository = new Mock<GenericRepository<Student>>(context);
-            mockedRepository.Setup(x => x.GetById(It.IsAny<int>())).Returns<int>((x) =>
+            var dbSet = GetStudentDbSet(studentList);
+            dbSet.Setup(x => x.Find(It.IsAny<object[]>())).Returns((object[] x) =>
             {
-                return studentList.FirstOrDefault(y => y.Id == x);
+                if (x == null)
+                {
+                    return null;
+                }
+
+                var id = 0;
+                if (int.TryParse(x[0].ToString(), out id))
+                {
+                    return studentList.FirstOrDefault(y => y.Id == id);
+                }
+
+                return null;
             });
+            var context = new Mock<MyUniDbContext>();
+
+            context.Setup(x => x.Set<Student>()).Returns(dbSet.Object);
+            var repository = new GenericRepository<Student>(context.Object);
             //
             // Act
             //
-            var student = mockedRepository.Object.GetById(1);
+            var student = repository.GetById(1);
             //
             // Assert
             //
@@ -96,20 +109,34 @@ namespace MyUni.Web.Tests.DAL
             // Arrange
             //
             var studentList = GetStudentList();
-            var context = GetMyUniDbContext(studentList);
-            var mockedRepository = new Mock<GenericRepository<Student>>(context);
-            mockedRepository.Setup(x => x.GetById(It.IsAny<int>())).Returns<int>((x) =>
+            var dbSet = GetStudentDbSet(studentList);
+            dbSet.Setup(x => x.Find(It.IsAny<object[]>())).Returns((object[] x) =>
             {
-                return studentList.FirstOrDefault(y => y.Id == x);
+                if (x == null)
+                {
+                    return null;
+                }
+
+                var id = 0;
+                if (int.TryParse(x[0].ToString(), out id))
+                {
+                    return studentList.FirstOrDefault(y => y.Id == id);
+                }
+
+                return null;
             });
+            var context = new Mock<MyUniDbContext>();
+
+            context.Setup(x => x.Set<Student>()).Returns(dbSet.Object);
+            var repository = new GenericRepository<Student>(context.Object);
             //
             // Act
             //
-            var student = mockedRepository.Object.GetById(5);
+            var student = repository.GetById(5);
             //
             // Assert
             //
-            Assert.IsNull(student, "The student cannot exist");
+            Assert.IsNull(student);
         }
 
         [TestMethod]
@@ -119,28 +146,27 @@ namespace MyUni.Web.Tests.DAL
             // Arrange
             //
             var studentList = GetStudentList();
-            var context = GetMyUniDbContext(studentList);
-            var mockedRepository = new Mock<GenericRepository<Student>>(context);
-            mockedRepository.Setup(x => x.Add(It.IsAny<Student>())).Returns((Student s) =>
+            var dbSet = GetStudentDbSet(studentList);
+            dbSet.Setup(x => x.Add(It.IsAny<Student>())).Returns((Student s) =>
             {
-                if (s == null)
-                {
-                    return null;
-                }
-
                 studentList.Add(s);
+
                 return s;
             });
+            var context = new Mock<MyUniDbContext>();
+            context.Setup(x => x.Set<Student>()).Returns(dbSet.Object);
+            var repository = new GenericRepository<Student>(context.Object);
             var newStudent = new Student {FirstName = "D"};
             //
             // Act
             //
-            var student = mockedRepository.Object.Add(newStudent);
+            var student = repository.Add(newStudent);
             //
             // Assert
             //
             Assert.AreEqual(4, studentList.Count);
             Assert.IsNotNull(student, "The student does not exist");
+            Assert.AreEqual(student, studentList[3]);
         }
 
         [TestMethod]
@@ -150,28 +176,31 @@ namespace MyUni.Web.Tests.DAL
             // Arrange
             //
             var studentList = GetStudentList();
-            var context = GetMyUniDbContext(studentList);
-            var mockedRepository = new Mock<GenericRepository<Student>>(context);
-            mockedRepository.Setup(x => x.Add(It.IsAny<Student>())).Returns((Student s) =>
+            var dbSet = GetStudentDbSet(studentList);
+            dbSet.Setup(x => x.Add(It.IsAny<Student>())).Returns((Student s) =>
             {
                 if (s == null)
                 {
-                    return null;
+                    return s;
                 }
 
                 studentList.Add(s);
+
                 return s;
             });
-            
+            var context = new Mock<MyUniDbContext>();
+            context.Setup(x => x.Set<Student>()).Returns(dbSet.Object);
+            var repository = new GenericRepository<Student>(context.Object);
             Student newStudent = null;
             //
             // Act
             //
-            var student = mockedRepository.Object.Add(newStudent);
+            var student = repository.Add(newStudent);
             //
             // Assert
             //
-            Assert.IsNull(student);
+            Assert.AreEqual(3, studentList.Count);
+            Assert.IsNull(student, "The student does not exist");
         }
 
         [TestMethod]
@@ -179,15 +208,10 @@ namespace MyUni.Web.Tests.DAL
         {
             var studentList = GetStudentList();
             var context = GetMyUniDbContext(studentList);
-            var mockedRepository = new Mock<GenericRepository<Student>>(context);
-            mockedRepository.Setup(x => x.Delete(It.IsAny<Student>())).Callback((Student s) =>
-            {
-                studentList.Remove(s);
-            });
-
+            var repository = new GenericRepository<Student>(context);
             var studentToRemove = studentList[0];
 
-            mockedRepository.Object.Delete(studentToRemove);
+            repository.Delete(studentToRemove);
 
             Assert.AreEqual(2,studentList.Count);
             Assert.AreNotEqual("A", studentList[0].FirstName);
@@ -198,15 +222,10 @@ namespace MyUni.Web.Tests.DAL
         {
             var studentList = GetStudentList();
             var context = GetMyUniDbContext(studentList);
-            var mockedRepository = new Mock<GenericRepository<Student>>(context);
-            mockedRepository.Setup(x => x.Delete(It.IsAny<Student>())).Callback((Student s) =>
-            {
-                studentList.Remove(s);
-            });
-
+            var repository = new GenericRepository<Student>(context);
             var studentToRemove = new Student{FirstName = "AAA"};
 
-            mockedRepository.Object.Delete(studentToRemove);
+            repository.Delete(studentToRemove);
 
             Assert.AreEqual(3, studentList.Count);
         }
@@ -216,15 +235,10 @@ namespace MyUni.Web.Tests.DAL
         {
             var studentList = GetStudentList();
             var context = GetMyUniDbContext(studentList);
-            var mockedRepository = new Mock<GenericRepository<Student>>(context);
-            mockedRepository.Setup(x => x.Delete(It.IsAny<int>())).Callback((int id) =>
-            {
-                studentList.Remove(studentList.FirstOrDefault(x => x.Id == id));
-            });
-
+            var repository = new GenericRepository<Student>(context);
             var studentToRemove = studentList[0];
 
-            mockedRepository.Object.Delete(studentToRemove.Id);
+            repository.Delete(studentToRemove.Id);
 
             Assert.AreEqual(2, studentList.Count);
             Assert.AreNotEqual("A", studentList[0].FirstName);
@@ -235,15 +249,10 @@ namespace MyUni.Web.Tests.DAL
         {
             var studentList = GetStudentList();
             var context = GetMyUniDbContext(studentList);
-            var mockedRepository = new Mock<GenericRepository<Student>>(context);
-            mockedRepository.Setup(x => x.Delete(It.IsAny<int>())).Callback((int id) =>
-            {
-                studentList.Remove(studentList.FirstOrDefault(x => x.Id == id));
-            });
-
+            var repository = new GenericRepository<Student>(context);
             var studentToRemove = new Student { Id = 999 };
 
-            mockedRepository.Object.Delete(studentToRemove.Id);
+            repository.Delete(studentToRemove.Id);
 
             Assert.AreEqual(3, studentList.Count);
         }
@@ -253,20 +262,11 @@ namespace MyUni.Web.Tests.DAL
         {
             var studentList = GetStudentList();
             var context = GetMyUniDbContext(studentList);
-            var mockedRepository = new Mock<GenericRepository<Student>>(context);
-            mockedRepository.Setup(x => x.Update(It.IsAny<Student>())).Callback((Student student) =>
-            {
-                var findIndex = studentList.FindIndex(x => x.Id == student.Id);
-                if (findIndex < 0)
-                {
-                    return;
-                }
-                studentList[findIndex] = student;
-            });
+            var repository = new GenericRepository<Student>(context);
             var studentToUpdate = studentList[0];
             studentToUpdate.FirstName = "AAA";
 
-            mockedRepository.Object.Update(studentToUpdate);
+            repository.Update(studentToUpdate);
 
             Assert.AreEqual(studentList[0], studentToUpdate);
             Assert.AreEqual("AAA", studentList[0].FirstName);
@@ -278,21 +278,11 @@ namespace MyUni.Web.Tests.DAL
         {
             var studentList = GetStudentList();
             var context = GetMyUniDbContext(studentList);
-            var mockedRepository = new Mock<GenericRepository<Student>>(context);
-            mockedRepository.Setup(x => x.Update(It.IsAny<Student>())).Callback((Student student) =>
-            {
-                var findIndex = studentList.FindIndex(x => x.Id == student.Id);
-                if (findIndex < 0)
-                {
-                    return;
-                }
-
-                studentList[findIndex] = student;
-            });
+            var repository = new GenericRepository<Student>(context);
             var studentToUpdate = new Student{FirstName = "AAA"};
             
 
-            mockedRepository.Object.Update(studentToUpdate);
+            repository.Update(studentToUpdate);
 
             Assert.AreEqual(studentList[0].FirstName, "A");
         }
@@ -303,19 +293,10 @@ namespace MyUni.Web.Tests.DAL
         {
             var studentList = GetStudentList();
             var context = GetMyUniDbContext(studentList);
-            var mockedRepository = new Mock<GenericRepository<Student>>(context);
-            mockedRepository.Setup(x => x.Get(It.IsAny<Func<Student, bool>>())).Returns((Func<Student, bool> filter) =>
-            {
-                if (filter == null)
-                {
-                    return null;
-                }
-
-                return studentList.Where(filter).AsQueryable();
-            });
+            var repository = new GenericRepository<Student>(context);
             Func<Student,bool> testFilter = (student) => student.FirstName == "A";
 
-            var filteredStudents = mockedRepository.Object.Get(testFilter);
+            var filteredStudents = repository.Get(testFilter);
 
             Assert.IsNotNull(filteredStudents);
             Assert.AreEqual(1, filteredStudents.Count());
