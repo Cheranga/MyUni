@@ -26,6 +26,33 @@ namespace MyUni.Web
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+             #region CSS Bundles
+
+            //
+            // AdminLTE theme
+            //
+            bundles.Add(new StyleBundle("~/bundles/adminltecss").Include(
+                "~/Content/bootstrap.css",
+                "~/Content/font-awesome.css",
+                "~/Content/ionicons.css",
+                "~/Content/AdminLTE.css",
+                "~/Content/skins/skin-blue-light.css",
+                "~/Content/Site.css"
+                ));
+
+            #endregion
+            
+
+            #region Script Bundles
+
+            bundles.Add(new ScriptBundle("~/bundles/adminltejs").Include(
+                      "~/Scripts/jquery-{version}.js",
+                      "~/Scripts/bootstrap.js",
+                      "~/Scripts/adminlte.js"
+                      ));
+
+            #endregion
         }
     }
 }

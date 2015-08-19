@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <title>@ViewBag.Title - Docusmart Workflow</title>
+    @Styles.Render("~/bundles/adminltecss")
+    @Scripts.Render("~/bundles/modernizr")
+
+
+    @RenderSection("customcss", false)
+</head>
+<body class="skin-blue-light sidebar-mini">
+    <div class="wrapper">
+
+        <!-- Main Header -->
+        <header class="main-header">
+
+            <!-- Logo -->
+            <a href="@Url.Action("Index", "Home")" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini">
+                    <i class="fa fa-university"></i>
+                    @*<img src="~/Content/Pentana.jpg" width="30" height="30" />*@
+                </span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg">
+
+                    @*<img src="~/Content/Pentana.jpg" width="30" height="30" />*@
+                    <i class="fa fa-university"></i>
+                    <b>My Uni</b>
+                </span>
+            </a>
+
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <!-- Navbar Right Menu -->
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="#">
+                                <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                                <span class="hidden-xs">@User.Identity.Name</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        @{ Html.RenderPartial("_Sidebar"); }
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+
+            <!-- Main content -->
+            <section class="content">
+
+                @RenderBody()
+
+            </section><!-- /.content -->
+        </div><!-- /.content-wrapper -->
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <!-- To the right -->
+            <div class="pull-right hidden-xs">
+                Version 0.0.0.0
+            </div>
+            <!-- Default to the left -->
+            <strong>Copyright &copy; 2015 <a href="http://www.google.com/">My Uni</a>.</strong> All rights reserved.
+        </footer>
+
+    </div><!-- ./wrapper -->
+    @Scripts.Render("~/bundles/adminltejs")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

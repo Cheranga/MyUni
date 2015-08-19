@@ -105,3 +105,10 @@ The reason for this is the user which the app pool have been defined doesn't hav
 2. Then grant him the required access rights to the database.
 
 
+Login failed for user 'IIS APPPOOL\ASP.NET v4.0'
+-----------------------------------------------
+
+This happens when the app pool user does not have access rights to the database which we're operating on.
+The solution is to create this user (if it's not there), and give him the probable access rights to the database
+
+http://stackoverflow.com/questions/7698286/login-failed-for-user-iis-apppool-asp-net-v4-0

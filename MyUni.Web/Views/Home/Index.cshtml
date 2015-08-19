@@ -32,15 +32,3 @@
         </p>
     </div>
 </div>
-
-@section scripts
-{
-    <script type="text/javascript">
-        $(function() {
-
-            $.get('@Url.Action("GetTestData")', function(data) {
-                console.log(data);
-            });
-        });
-    </script>
-}
