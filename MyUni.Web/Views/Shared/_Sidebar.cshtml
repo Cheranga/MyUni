@@ -1,0 +1,45 @@
+﻿
+<aside class="main-sidebar">
+
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar Menu -->
+        <ul class="sidebar-menu">
+            <!-- Optionally, you can add icons to the links -->
+            
+                <li class="treeview active">
+                    <a href="#">
+                        <i class="fa fa-key"></i>
+                        <span>Administration</span> <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li>
+                            <a href="@Url.Action("Index", "Department")">
+                                <i class="fa fa-google"></i>
+                                <span>Departments</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Course")">
+                                <i class="fa fa-lightbulb-o"></i>
+                                <span>Courses</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Instructor")">
+                                <i class="fa fa-bolt"></i>
+                                <span>Instructors</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Students")">
+                                <i class="fa fa-users"></i>
+                                <span>Students</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+        </ul><!-- /.sidebar-menu -->
+    </section>
+    <!-- /.sidebar -->
+</aside>

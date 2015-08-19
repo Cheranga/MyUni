@@ -47,7 +47,6 @@ namespace MyUni.Web.Infrastructure
 
                 return new Dictionary<Type, object>
                 {
-                    //{typeof (Course), new CourseRepository(dbContext)},
                     {typeof (Instructor), new InstructorRepository(dbContext)}
                 };
             }).WhenInjectedInto<IRepositoryFactory>().InRequestScope();
