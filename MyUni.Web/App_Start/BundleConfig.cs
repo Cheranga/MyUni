@@ -42,16 +42,34 @@ namespace MyUni.Web
                 "~/Content/Site.css"
                 ));
 
+            //
+            // Bootstrap date time picker
+            //
+            bundles.Add(new StyleBundle("~/datetimepickercss").Include(
+               "~/Content/boostrap-datetimepicker.css"
+               ));
+
             #endregion
             
 
             #region Script Bundles
 
-            bundles.Add(new ScriptBundle("~/adminltejs").Include(
+            //
+            // Admin LTE scripts
+            //
+            bundles.Add(new ScriptBundle("~/bundles/adminltejs").Include(
                       "~/Scripts/jquery-{version}.js",
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/adminlte.js"
                       ));
+
+            //
+            // Bootstrap date time picker scripts
+            //
+            bundles.Add(new ScriptBundle("~/bundles/datetimepickerjs").Include(
+                "~/Scripts/moment.js",
+                "~/Scripts/bootstrap-datetimepicker.js"
+                ));
 
             #endregion
 

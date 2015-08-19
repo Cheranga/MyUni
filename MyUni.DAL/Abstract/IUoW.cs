@@ -26,6 +26,8 @@ namespace StageDocs.DAL.Abstract
         /// <returns>IQueryable of T</returns>
         IQueryable<T> Get<T>(Expression<Func<T, bool>> filter) where T : class, IModel;
 
+        T GetByFilter<T>(Expression<Func<T, bool>> filter) where T : class, IModel;
+
     }
 
     public interface IDataResult

@@ -47,8 +47,8 @@ namespace MyUni.DAL.Migrations
         private void SeedInstructors(MyUniDbContext context)
         {
             context.Instructors.AddOrUpdate(x=>x.FirstName,
-                new Instructor { FirstName = "Bill", LastName = "Gates", HireDate = DateTime.Now.AddYears(-50)},
-                new Instructor { FirstName = "Mr. Career", LastName = "Agnostic", HireDate = DateTime.Now.AddYears(-50) }
+                new Instructor { FirstName = "Bill", LastName = "Gates", HireDate = DateTime.Now.AddYears(-10)},
+                new Instructor { FirstName = "Mr. Career", LastName = "Agnostic", HireDate = DateTime.Now.AddYears(-10) }
                 );
 
             context.SaveChanges();
@@ -67,11 +67,11 @@ namespace MyUni.DAL.Migrations
         private void SeedDepartments(MyUniDbContext context)
         {
             context.Departments.AddOrUpdate(x=>x.Name,
-                new Department { Name = "Microsoft",Budget = 5000000, Administrator = context.Instructors.FirstOrDefault(x=>x.LastName == "Gates"),StartDate = DateTime.Now.AddYears(-40), RowVersion = Guid.NewGuid().ToByteArray()},
-                new Department { Name = "Career Development", Budget = 1000000, Administrator = context.Instructors.FirstOrDefault(x => x.FirstName == "Mr. Career"), StartDate = DateTime.Now.AddYears(-40), RowVersion = Guid.NewGuid().ToByteArray() },
-                new Department { Name = "Client Technologies", Budget = 1000000, RowVersion = Guid.NewGuid().ToByteArray() },
-                new Department { Name = "Databases", Budget = 1000000, RowVersion = Guid.NewGuid().ToByteArray() },
-                new Department { Name = "Web Services", Budget = 1000000, RowVersion = Guid.NewGuid().ToByteArray() }
+                new Department { Name = "Microsoft",Budget = 5000000, AdministratorId = context.Instructors.FirstOrDefault(x=>x.LastName == "Gates").Id,StartDate = DateTime.Now.AddYears(-20), RowVersion = Guid.NewGuid().ToByteArray()},
+                new Department { Name = "Career Development", Budget = 1000000, AdministratorId = context.Instructors.FirstOrDefault(x => x.FirstName == "Mr. Career").Id, StartDate = DateTime.Now.AddYears(-20), RowVersion = Guid.NewGuid().ToByteArray() },
+                new Department { Name = "Client Technologies", Budget = 1000000, StartDate = DateTime.Now.AddYears(-20), RowVersion = Guid.NewGuid().ToByteArray() },
+                new Department { Name = "Databases", Budget = 1000000, StartDate = DateTime.Now.AddYears(-20), RowVersion = Guid.NewGuid().ToByteArray() },
+                new Department { Name = "Web Services", Budget = 1000000, StartDate = DateTime.Now.AddYears(-20), RowVersion = Guid.NewGuid().ToByteArray() }
                 );
 
             context.SaveChanges();

@@ -1,4 +1,5 @@
 using System.Web.Http;
+using System.Web.ModelBinding;
 using MyUni.Web.Infrastructure;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(MyUni.Web.App_Start.NinjectWebCommon), "Start")]
@@ -49,6 +50,8 @@ namespace MyUni.Web.App_Start
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
                 RegisterServices(kernel);
+
+                //System.Web.Mvc.ModelBinders.Binders.Add(typeof(DateTime), new DateTimeModelBinder());
                 return kernel;
             }
             catch

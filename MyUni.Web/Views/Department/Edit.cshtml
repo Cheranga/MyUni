@@ -10,7 +10,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Department</h4>
         <hr />
@@ -46,18 +46,25 @@
         <div class="form-group">
             @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.TextBox("StartDate", Model.StartDate.ToString("dd/MM/YYYY"), new { htmlAttributes = new { @class = "form-control" } })*@
+                @*@Html.EditorFor(model => model.StartDate)*@
+                <div class="input-group date" id="StartDateDiv">
+                    <input type='text' id="StartDate" name="StartDate" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
                 @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
             </div>
         </div>
 
         @*<div class="form-group">
-            @Html.LabelFor(model => model.RowVersion, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RowVersion, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.RowVersion, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
+                @Html.LabelFor(model => model.RowVersion, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.RowVersion, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.RowVersion, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -71,6 +78,23 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
+@section customcss
+{
+    @Styles.Render("~/datetimepickercss");
+}
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/datetimepickerjs")
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('#StartDate').datetimepicker({
+                format: 'DD/MM/YYYY'
+            });
+
+            $('#StartDateDiv').data('DateTimePicker').date('@Model.StartDate.ToString("dd/MM/yyyy")');
+        });
+    </script>
 }

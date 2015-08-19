@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using MyUni.DAL;
+using MyUni.Web.Infrastructure;
 
 namespace MyUni.Web
 {
@@ -22,6 +23,11 @@ namespace MyUni.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            //
+            // Register custom model binders
+            //
+            ModelBinders.Binders.Add(typeof(DateTime), new DateTimeModelBinder());
         }
     }
 }

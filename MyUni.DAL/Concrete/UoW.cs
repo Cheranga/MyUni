@@ -101,6 +101,13 @@ namespace MyUni.DAL.Concrete
             return results == null ? null : results.Where(filter);
         }
 
+        public T GetByFilter<T>(Expression<Func<T, bool>> filter) where T : class, IModel
+        {
+            var results = this.Get(filter);
+
+            return results == null ? null : results.FirstOrDefault();
+        }
+
         //public virtual T Commit<T>(Func<T> action) where T:class 
         //{
         //    T result = null;
