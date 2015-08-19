@@ -5,13 +5,16 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Mvc;
+using System.Web.UI;
 using MyUni.Business;
 using MyUni.DAL;
 using StageDocs.DAL.Abstract;
 
 namespace MyUni.Web.Controllers
 {
+  
     public class StudentsController : MyUniBaseController
     {
         public StudentsController(IUoW uow)
@@ -19,6 +22,14 @@ namespace MyUni.Web.Controllers
         {
         }
 
+
+        /*
+   * TODO:
+   * 1. Include the view in side a  panel
+   * 2. Use bootstrap tables with the correct admin lte styles with paging.
+   * 3. Edit/Details/Delete should be shown as buttons with proper icons
+   * 4. Search functionality should be there (AJAX), with paging support
+   * */
         public ActionResult Index()
         {
             var repository = this.GetRepository<Student>();
@@ -205,6 +216,28 @@ namespace MyUni.Web.Controllers
             {
                 return RedirectToAction("Delete", new { id, showError = true });
             }
+        }
+
+
+        //
+        // Cache the search results in the client side
+        //
+        [OutputCache(Duration = 60,VaryByParam = "search", Location = OutputCacheLocation.Client)]
+        public ActionResult SearchStudents(string search, int? page)
+        {
+            IQueryable<Student> students = null;
+
+            if (string.IsNullOrEmpty(search))
+            {
+                students = this.UoW.Get<Student>();
+            }
+            else
+            {
+                students = this.UoW.Get<Student>(x => x.FirstName.Contains(search) ||
+                                                      x.LastName.Contains(search));
+            }
+
+            return PartialView("_studentList", students);
         }
     }
 }

@@ -4,42 +4,65 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EnrolledDate)
-        </th>
-        <th></th>
-    </tr>
+<div class="col-sm-12">
+    <div class="box box-default box-solid">
+        <div class="box-header with-border">
+            <h3 class="box-title">Students</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+            @using (Ajax.BeginForm(new AjaxOptions
+            {
+                HttpMethod = "GET",
+                InsertionMode = InsertionMode.Replace,
+                UpdateTargetId = "divStudents",
+                Url = Url.Action("SearchStudents"),
+                AllowCache = true
+            }))
+            {
+                <div class="col-sm-3 no-left-padding">
+                    <div class="input-group input-group-sm">
+                        <input type="text" id="search" name="search" class="form-control">
+                        <span class="input-group-btn">
+                            @*<a href="@Url.Action("SearchStudents")" data-ajax="true" class="btn btn-info btn-flat">
+                                <i class="fa fa-search"></i>
+                            </a>*@
+                            @Ajax.ActionLink("Search", "SearchStudents",null)
+                            @*<button type="submit" class="btn btn-info btn-flat">
+                                    <i class="fa fa-search"></i>
+                                </button>*@
+                        </span>
+                    </div>
+                </div>
+            }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EnrolledDate)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+            @*<div class="col-sm-9"></div>*@
+            <div class="clearfix visible-sm-block"></div>
+            <hr />
+            <p>
+                <a href="@Url.Action("Create")" class="btn btn-warning">
+                    <i class="fa fa-plus"></i>
+                    &nbsp;Add New Student
+                </a>
+            </p>
+            <div id="divStudents">
+                @{ Html.RenderPartial("_studentList", Model); }
+            </div>
+
+        </div><!-- /.box-body -->
+        <div class="box-footer clearfix">
+            <ul class="pagination pagination-sm no-margin pull-right">
+                <li><a href="#">«</a></li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">»</a></li>
+            </ul>
+        </div>
+    </div><!-- /.box -->
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval");
 }
-
-</table>
