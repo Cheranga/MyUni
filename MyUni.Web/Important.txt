@@ -92,3 +92,16 @@ DI with Ninject
         }  
 
 	The above code will register the created custom dependency resolver as the application's dependency resolver.
+
+
+Cannot open database "DSWorkflow" requested by the login. The login failed. Login failed for user 'IIS APPPOOL\DefaultAppPool'.
+-------------------------------------------------------------------------------------------------------------------------------
+
+http://stackoverflow.com/questions/7698286/login-failed-for-user-iis-apppool-asp-net-v4-0
+
+The reason for this is the user which the app pool have been defined doesn't have access to the database. To fix this,
+
+1. In SSMS, under the server, expand Security, and create a user by the name "IIS APPPOOL\DefaultAppPool".
+2. Then grant him the required access rights to the database.
+
+
