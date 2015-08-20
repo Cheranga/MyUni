@@ -6,7 +6,7 @@
 
 
 <div class="col-sm-12">
-    <div class="box box-default box-solid">
+    <div class="box box-info box-solid">
         <div class="box-header with-border">
             <h3 class="box-title">Students</h3>
         </div><!-- /.box-header -->
@@ -27,10 +27,14 @@
                             @*<a href="@Url.Action("SearchStudents")" data-ajax="true" class="btn btn-info btn-flat">
                                 <i class="fa fa-search"></i>
                             </a>*@
-                            @Ajax.ActionLink("Search", "SearchStudents",null)
-                            @*<button type="submit" class="btn btn-info btn-flat">
+                            @*@Ajax.ActionLink("Search", "SearchStudents",new AjaxOptions
+                            {
+                                InsertionMode = InsertionMode.Replace,
+                                UpdateTargetId = "divStudents"
+                            })*@
+                            <button type="submit" class="btn btn-info btn-flat">
                                     <i class="fa fa-search"></i>
-                                </button>*@
+                                </button>
                         </span>
                     </div>
                 </div>
@@ -46,7 +50,8 @@
                 </a>
             </p>
             <div id="divStudents">
-                @{ Html.RenderPartial("_studentList", Model); }
+                @{ Html.RenderAction("SearchStudents"); }
+                @*@{ Html.RenderPartial("_studentList", Model); }*@
             </div>
 
         </div><!-- /.box-body -->
