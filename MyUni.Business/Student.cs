@@ -30,5 +30,10 @@ namespace MyUni.Business
             get { return string.Format("{0} {1}", this.FirstName, this.LastName); }
         }
 
+        public Student()
+        {
+            this.Enrollments = new List<Enrollment>();
+        }
+
     }
 }

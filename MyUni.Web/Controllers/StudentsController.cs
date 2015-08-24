@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using MyUni.Business;
 using MyUni.DAL;
+using MyUni.Web.ViewModels.Student;
 using StageDocs.DAL.Abstract;
 
 namespace MyUni.Web.Controllers
@@ -30,7 +31,7 @@ namespace MyUni.Web.Controllers
    * 3. Edit/Details/Delete should be shown as buttons with proper icons
    * 4. Search functionality should be there (AJAX), with paging support
    * */
-        public ActionResult Index()
+        public ActionResult Index(int currentPage = 1)
         {
             var repository = this.GetRepository<Student>();
             if (repository == null)
@@ -38,7 +39,18 @@ namespace MyUni.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
-            return View(repository.GetAll().ToList());
+            currentPage = currentPage <= 0 ? 1 : currentPage;
+
+            var allStudents = repository.GetAll();
+            var totalStudentCount = allStudents.Count();
+            
+            var viewModel = new StudentListViewModel
+            {
+                Students = allStudents.OrderBy(x => x.FirstName).Skip((currentPage-1) * 10).Take(10).ToList(),
+                TotalPages = (totalStudentCount/10) == 0? 1 : totalStudentCount/10
+            };
+
+            return View(viewModel);
         }
 
         public ActionResult Details(int? id)
@@ -223,7 +235,7 @@ namespace MyUni.Web.Controllers
         // Cache the search results in the client side
         //
         [OutputCache(Duration = 60,VaryByParam = "search", Location = OutputCacheLocation.Client)]
-        public ActionResult SearchStudents(string search, int? page)
+        public ActionResult SearchStudents(string search, int page=1)
         {
             IQueryable<Student> students = null;
 
@@ -237,7 +249,19 @@ namespace MyUni.Web.Controllers
                                                       x.LastName.Contains(search));
             }
 
-            return PartialView("_studentList", students);
+            page = page <= 0 ? 1 : page;
+
+            var totalStudents = students.Count();
+            
+
+            var viewModel = new StudentListViewModel
+            {
+                Search = search,
+                Students = students.OrderBy(x => x.FirstName).Skip((page-1) * 10).Take(10).ToList(),
+                TotalPages = (totalStudents/10) == 0 ? 1: totalStudents/10
+            };
+
+            return PartialView("_studentList", viewModel.Students);
         }
     }
 }

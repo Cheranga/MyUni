@@ -1,7 +1,8 @@
-﻿@model IEnumerable<MyUni.Business.Student>
+﻿@*@model IEnumerable<MyUni.Business.Student>*@
+@model MyUni.Web.ViewModels.Student.StudentListViewModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Students";
 }
 
 
@@ -50,18 +51,24 @@
                 </a>
             </p>
             <div id="divStudents">
-                @{ Html.RenderAction("SearchStudents"); }
-                @*@{ Html.RenderPartial("_studentList", Model); }*@
+                @*@{ Html.RenderAction("SearchStudents"); }*@
+                @{ Html.RenderPartial("_studentList", Model.Students); }
             </div>
 
         </div><!-- /.box-body -->
         <div class="box-footer clearfix">
             <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a href="#">«</a></li>
+                @for (var index = 0; index < Model.TotalPages; index++)
+                {
+                    <li class="@(index == Model.CurrentPage? "active" : "")">
+                        @Html.ActionLink((index+1).ToString(), "SearchStudents", new{search=Model.Search, page=index+1})
+                    </li>
+                }
+                @*<li><a href="#">«</a></li>
                 <li><a href="#">1</a></li>
                 <li><a href="#">2</a></li>
                 <li><a href="#">3</a></li>
-                <li><a href="#">»</a></li>
+                <li><a href="#">»</a></li>*@
             </ul>
         </div>
     </div><!-- /.box -->
