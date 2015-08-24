@@ -16,6 +16,8 @@ namespace MyUni.Web.Controllers
         /// </summary>
         protected IUoW UoW { get; private set; }
 
+        protected int PageSize = 1;
+
         public MyUniBaseController(IUoW uow)
         {
             if (uow == null)

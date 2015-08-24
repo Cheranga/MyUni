@@ -15,7 +15,7 @@ using StageDocs.DAL.Abstract;
 
 namespace MyUni.Web.Controllers
 {
-  
+
     public class StudentsController : MyUniBaseController
     {
         public StudentsController(IUoW uow)
@@ -43,11 +43,11 @@ namespace MyUni.Web.Controllers
 
             var allStudents = repository.GetAll();
             var totalStudentCount = allStudents.Count();
-            
+
             var viewModel = new StudentListViewModel
             {
-                Students = allStudents.OrderBy(x => x.FirstName).Skip((currentPage-1) * 10).Take(10).ToList(),
-                TotalPages = (totalStudentCount/10) == 0? 1 : totalStudentCount/10
+                Students = allStudents.OrderBy(x => x.FirstName).Skip((currentPage - 1) * this.PageSize).Take(this.PageSize).ToList(),
+                TotalPages = (totalStudentCount / this.PageSize) == 0 ? 1 : totalStudentCount / this.PageSize
             };
 
             return View(viewModel);
@@ -234,8 +234,8 @@ namespace MyUni.Web.Controllers
         //
         // Cache the search results in the client side
         //
-        [OutputCache(Duration = 60,VaryByParam = "search", Location = OutputCacheLocation.Client)]
-        public ActionResult SearchStudents(string search, int page=1)
+        [OutputCache(Duration = 60, VaryByParam = "search", Location = OutputCacheLocation.Client)]
+        public ActionResult SearchStudents(string search, int page = 1)
         {
             IQueryable<Student> students = null;
 
@@ -252,13 +252,13 @@ namespace MyUni.Web.Controllers
             page = page <= 0 ? 1 : page;
 
             var totalStudents = students.Count();
-            
+
 
             var viewModel = new StudentListViewModel
             {
                 Search = search,
-                Students = students.OrderBy(x => x.FirstName).Skip((page-1) * 10).Take(10).ToList(),
-                TotalPages = (totalStudents/10) == 0 ? 1: totalStudents/10
+                Students = students.OrderBy(x => x.FirstName).Skip((page - 1) * this.PageSize).Take(this.PageSize).ToList(),
+                TotalPages = (totalStudents / this.PageSize) == 0 ? 1 : totalStudents / this.PageSize
             };
 
             return PartialView("_studentList", viewModel.Students);

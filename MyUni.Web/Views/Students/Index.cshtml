@@ -58,10 +58,19 @@
         </div><!-- /.box-body -->
         <div class="box-footer clearfix">
             <ul class="pagination pagination-sm no-margin pull-right">
+                
                 @for (var index = 0; index < Model.TotalPages; index++)
                 {
                     <li class="@(index == Model.CurrentPage? "active" : "")">
-                        @Html.ActionLink((index+1).ToString(), "SearchStudents", new{search=Model.Search, page=index+1})
+                        @Ajax.ActionLink((index + 1).ToString(), "SearchStudents", new AjaxOptions
+                        {
+                            HttpMethod = "GET",
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = "divStudents",
+                            Url = Url.Action("SearchStudents", new { search = Model.Search, page = index + 1 }),
+                            AllowCache = true 
+                        })
+                        
                     </li>
                 }
                 @*<li><a href="#">«</a></li>
