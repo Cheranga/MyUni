@@ -1,5 +1,6 @@
 ﻿@*@model IEnumerable<MyUni.Business.Student>*@
-@model MyUni.Web.ViewModels.Student.StudentListViewModel
+@using System.Web.Mvc.Html
+@model MyUni.Web.ViewModels.PagedViewModel<MyUni.Business.Student>
 
 @{
     ViewBag.Title = "Students";
@@ -16,8 +17,8 @@
             {
                 HttpMethod = "GET",
                 InsertionMode = InsertionMode.Replace,
-                UpdateTargetId = "divStudents",
-                Url = Url.Action("SearchStudents"),
+                UpdateTargetId = "divSearchResults",
+                Url = Url.Action("Index", new { search = Model.Search, currentPage = 1, fromSearch=true }),
                 AllowCache = true
             }))
             {
@@ -26,16 +27,16 @@
                         <input type="text" id="search" name="search" class="form-control">
                         <span class="input-group-btn">
                             @*<a href="@Url.Action("SearchStudents")" data-ajax="true" class="btn btn-info btn-flat">
-                                <i class="fa fa-search"></i>
-                            </a>*@
-                            @*@Ajax.ActionLink("Search", "SearchStudents",new AjaxOptions
-                            {
-                                InsertionMode = InsertionMode.Replace,
-                                UpdateTargetId = "divStudents"
-                            })*@
-                            <button type="submit" class="btn btn-info btn-flat">
                                     <i class="fa fa-search"></i>
-                                </button>
+                                </a>*@
+                            @*@Ajax.ActionLink("Search", "SearchStudents",new AjaxOptions
+                                {
+                                    InsertionMode = InsertionMode.Replace,
+                                    UpdateTargetId = "divStudents"
+                                })*@
+                            <button type="submit" class="btn btn-info btn-flat">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </span>
                     </div>
                 </div>
@@ -50,40 +51,42 @@
                     &nbsp;Add New Student
                 </a>
             </p>
-            <div id="divStudents">
+            <div id="divSearchResults">
                 @*@{ Html.RenderAction("SearchStudents"); }*@
-                @{ Html.RenderPartial("_studentList", Model.Students); }
+                @{ Html.RenderPartial("_studentList", Model); }
             </div>
 
+
         </div><!-- /.box-body -->
-        <div class="box-footer clearfix">
-            <ul class="pagination pagination-sm no-margin pull-right">
-                
-                @for (var index = 0; index < Model.TotalPages; index++)
-                {
-                    <li class="@(index == Model.CurrentPage? "active" : "")">
-                        @Ajax.ActionLink((index + 1).ToString(), "SearchStudents", new AjaxOptions
-                        {
-                            HttpMethod = "GET",
-                            InsertionMode = InsertionMode.Replace,
-                            UpdateTargetId = "divStudents",
-                            Url = Url.Action("SearchStudents", new { search = Model.Search, page = index + 1 }),
-                            AllowCache = true 
-                        })
-                        
-                    </li>
-                }
-                @*<li><a href="#">«</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">»</a></li>*@
-            </ul>
-        </div>
+        @*<div class="box-footer clearfix">
+                <ul class="pagination pagination-sm no-margin pull-right">
+
+                    @for (var index = 0; index < Model.TotalPages; index++)
+                    {
+                        <li class="@(index == Model.CurrentPage? "active" : "")">
+                            @Ajax.ActionLink((index + 1).ToString(), "Index", new { search = Model.Search, currentPage = index + 1 }, new AjaxOptions
+                            {
+                                HttpMethod = "GET",
+                                InsertionMode = InsertionMode.Replace,
+                                UpdateTargetId = "divStudents",
+                                AllowCache = true
+                            })
+
+                        </li>
+                    }
+                </ul>
+            </div>*@
     </div><!-- /.box -->
 </div>
 
 @section scripts
 {
     @Scripts.Render("~/bundles/jqueryval");
+
+    <script type="text/javascript">
+        function updatePageInfo(e) {
+            $('#pagedList li').removeClass('active');
+            $('#link' + e).addClass('active');
+        }
+    </script>
 }

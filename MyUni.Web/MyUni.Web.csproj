@@ -210,7 +210,7 @@
     <Compile Include="ViewModels\InstructorListViewModel.cs" />
     <Compile Include="ViewModels\InstructorViewModel.cs" />
     <Compile Include="ViewModels\Student\StudentDetailViewModel.cs" />
-    <Compile Include="ViewModels\Student\StudentListViewModel.cs" />
+    <Compile Include="ViewModels\PagedViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\AdminLTE.css" />
