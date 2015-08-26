@@ -18,7 +18,7 @@
                 HttpMethod = "GET",
                 InsertionMode = InsertionMode.Replace,
                 UpdateTargetId = "divSearchResults",
-                Url = Url.Action("Index", new { search = Model.Search, currentPage = 1, fromSearch=true }),
+                Url = Url.Action("Index", new { search = Model.Search, currentPage = 1, fromSearch = true }),
                 AllowCache = true
             }))
             {
@@ -56,6 +56,18 @@
                 @{ Html.RenderPartial("_studentList", Model); }
             </div>
 
+            <div>
+                <table id="tblTest" class="table table-condensed table-hover table-bordered table-striped dataTable display" role="grid">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Enrolled Date</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
 
         </div><!-- /.box-body -->
         @*<div class="box-footer clearfix">
@@ -79,11 +91,45 @@
     </div><!-- /.box -->
 </div>
 
+
+
 @section scripts
 {
     @Scripts.Render("~/bundles/jqueryval");
-
     <script type="text/javascript">
+
+        $(function () {
+            $("#tblTest").DataTable({
+                columns: [
+                    //{
+                    //    data: null,
+                    //    render: function(data, type, row) {
+                    //        // Combine the first and last names into a single table field
+                    //        return data.first_name + ' ' + data.last_name;
+                    //    }
+                    //},
+                    { data: "FirstName"},
+                    { data: "LastName"},
+                    {
+                        data: "EnrolledDate",
+                        render: function (dateObj) {
+                            //
+                            // To format the date properly
+                            //  http://stackoverflow.com/questions/726334/asp-net-mvc-jsonresult-date-format
+                            //
+                            var oDate = new Date(parseInt(dateObj.substr(6)));//new Date(dateObj.aData[0]);
+                            var result = oDate.getDate() + "/" + (oDate.getMonth() + 1) + "/" + oDate.getFullYear();
+                            return "<span>" + result + "</span>";
+                        }
+                    }
+                ],
+                //"searchable":true,
+                "processing": true,
+                "serverSide": true,
+                "ajax": "@Url.Action("GetTestData")"
+            });
+        });
+
         function updatePageInfo(e) {
             $('#pagedList li').removeClass('active');
             $('#link' + e).addClass('active');

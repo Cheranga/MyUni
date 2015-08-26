@@ -224,6 +224,13 @@
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\ionicons.css" />
+    <Content Include="Content\plugins\dataTables.bootstrap.css" />
+    <Content Include="Content\plugins\images\sort_asc.png" />
+    <Content Include="Content\plugins\images\sort_asc_disabled.png" />
+    <Content Include="Content\plugins\images\sort_both.png" />
+    <Content Include="Content\plugins\images\sort_desc.png" />
+    <Content Include="Content\plugins\images\sort_desc_disabled.png" />
+    <Content Include="Content\plugins\jquery.dataTables.css" />
     <Content Include="Content\skins\skin-blue-light.css" />
     <Content Include="Content\skins\skin-blue-light.min.css" />
     <Content Include="Content\skins\skin-blue.css" />
@@ -262,6 +269,8 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\plugins\dataTables.bootstrap.js" />
+    <Content Include="Scripts\plugins\jquery.dataTables.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />

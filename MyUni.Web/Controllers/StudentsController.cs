@@ -243,6 +243,39 @@ namespace MyUni.Web.Controllers
             }
         }
 
+        public ActionResult GetTestData(FormCollection formData, int draw, int start, int length, string[] columns, int[] order,  string[] search, string ssearch)
+        {
+            
+            var allStudents = this.UoW.Get<Student>();
+
+            if (allStudents == null)
+            {
+                return Json(new
+                {
+                    draw,
+                    recordsTotal = 0,
+                    recordsFiltered = 0,
+                    data = new object[0],
+                    error="There are no students"
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+            var filteredStudents = allStudents;
+            //if (!string.IsNullOrEmpty(search))
+            //{
+            //    filteredStudents = allStudents.Where(x => x.FirstName == search || x.LastName == search);
+            //}
+
+            return Json(new
+            {
+                draw,
+                recordsTotal = allStudents.Count(),
+                recordsFiltered = filteredStudents.Count(),
+                data = filteredStudents
+            }, JsonRequestBehavior.AllowGet);
+
+        }
+
 
         //
         // Cache the search results in the client side

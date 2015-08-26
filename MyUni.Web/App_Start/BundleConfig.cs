@@ -37,6 +37,7 @@ namespace MyUni.Web
                 "~/Content/bootstrap.css",
                 "~/Content/font-awesome.css",
                 "~/Content/ionicons.css",
+                "~/Content/plugins/dataTables.bootstrap.css",
                 "~/Content/AdminLTE.css",
                 "~/Content/skins/skin-blue-light.css",
                 "~/Content/Site.css"
@@ -50,6 +51,10 @@ namespace MyUni.Web
             bundles.Add(new ScriptBundle("~/bundles/adminltejs").Include(
                       "~/Scripts/jquery-{version}.js",
                       "~/Scripts/bootstrap.js",
+
+                      "~/Scripts/plugins/jquery.dataTables.js",
+                      "~/Scripts/plugins/dataTables.bootstrap.js",
+
                       "~/Scripts/adminlte.js"
                       ));
 
