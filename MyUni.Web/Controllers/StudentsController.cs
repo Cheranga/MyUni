@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Web;
 using System.Web.Caching;
@@ -10,9 +11,11 @@ using System.Web.Mvc;
 using System.Web.UI;
 using MyUni.Business;
 using MyUni.DAL;
+using MyUni.Web.Infrastructure;
 using MyUni.Web.ViewModels;
 using MyUni.Web.ViewModels.Student;
 using StageDocs.DAL.Abstract;
+using WebGrease.Css.Extensions;
 
 namespace MyUni.Web.Controllers
 {
@@ -243,37 +246,136 @@ namespace MyUni.Web.Controllers
             }
         }
 
-        public ActionResult GetTestData(FormCollection formData, int draw, int start, int length, string[] columns, int[] order,  string[] search, string ssearch)
+        public ActionResult GetTestData(DataTableInfo dataTableInfo)
         {
-            
+            if (dataTableInfo == null)
+            {
+                return Json(new
+                {
+                    draw = 0,
+                    recordsTotal = 0,
+                    recordsFiltered = 0,
+                    data = new object[0],
+                    error = "Incorrect request"
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+
             var allStudents = this.UoW.Get<Student>();
+
+            var temp = allStudents.ToList();
+            temp.AddRange(Enumerable.Range(1, 10).SelectMany(x => allStudents));
+
+            allStudents = temp.AsQueryable();
 
             if (allStudents == null)
             {
                 return Json(new
                 {
-                    draw,
+                    draw = dataTableInfo.Draw,
                     recordsTotal = 0,
                     recordsFiltered = 0,
                     data = new object[0],
-                    error="There are no students"
+                    error = "There are no students"
                 }, JsonRequestBehavior.AllowGet);
             }
 
-            var filteredStudents = allStudents;
-            //if (!string.IsNullOrEmpty(search))
-            //{
-            //    filteredStudents = allStudents.Where(x => x.FirstName == search || x.LastName == search);
-            //}
+
+            //var filteredStudents = allStudents;
+            IOrderedQueryable<Student> orderedList = null;
+
+            if (dataTableInfo.OrderedColumns != null)
+            {
+                //
+                // TODO: Need to consider the list of columns
+                //
+                var colList = dataTableInfo.OrderedColumns.ToList();
+                var orderApplied = false;
+
+
+                //
+                // Getting the property dynamically
+                // http://stackoverflow.com/questions/2728340/how-can-i-do-an-orderby-with-a-dynamic-string-parameter
+                //
+
+                //var expressions = colList.GetExpressionList<Student>();
+
+                orderedList = allStudents.GetOrderedCollection(dataTableInfo.OrderedColumns);
+
+                //if (expressions != null)
+                //{
+                //    var applied = false;
+                //    expressions.ForEach(x =>
+                //    {
+                //        if (applied)
+                //        {
+                //            orderedList = x.ColumnOrder == ColumnOrder.Asc ? orderedList.ThenBy(y => x.Func(y)) : orderedList.ThenByDescending(y => x.Func(y));
+                //        }
+                //        else
+                //        {
+                //            orderedList = x.ColumnOrder == ColumnOrder.Asc ? allStudents.OrderBy(y => x.Func(y)) : allStudents.OrderByDescending(y => x.Func(y));
+                //        }
+                //    });
+                //}
+
+                //colList.ForEach(column =>
+                //{
+                //    var propertyInfo = typeof(Student).GetProperty(column.Field);
+                //    if (propertyInfo == null)
+                //    {
+                //        return;
+                //    }
+
+                //    if (orderApplied && orderedList != null)
+                //    {
+                //        orderedList = column.ColumnOrder == ColumnOrder.Asc ?
+                //            orderedList.ThenBy(x => propertyInfo.GetValue(x, null)) :
+                //            orderedList.ThenByDescending(x => propertyInfo.GetValue(x, null));
+                //    }
+                //    else
+                //    {
+                //        orderedList = column.ColumnOrder == ColumnOrder.Asc ?
+                //            allStudents.OrderBy(x => propertyInfo.GetValue(x, null)) :
+                //            allStudents.OrderByDescending(x => propertyInfo.GetValue(x, null));
+
+                //        orderApplied = true;
+                //    }
+                //});
+
+
+                //var test = filteredStudents.OrderByDescending(x=>propertyInfo.GetValue(x,null)).ToList();
+
+                //if (orderByColumn.Field == "FirstName")
+                //{
+                //    filteredStudents = orderByColumn.ColumnOrder == ColumnOrder.Asc ? filteredStudents.OrderBy(x => x.FirstName) : filteredStudents.OrderByDescending(x => x.FirstName);
+                //}
+                //else if (orderByColumn.Field == "LastName")
+                //{
+                //    filteredStudents = orderByColumn.ColumnOrder == ColumnOrder.Asc ? filteredStudents.OrderBy(x => x.LastName) : filteredStudents.OrderByDescending(x => x.LastName);
+                //}
+
+            }
+
+            var filter = dataTableInfo.Search;
+            var filteredStudents = orderedList ?? new List<Student>().AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter) && orderedList != null)
+            {
+                filteredStudents = orderedList.Where(x => x.FirstName.Contains(filter) || x.LastName.Contains(filter));
+            }
+
+            //filteredStudents = filteredStudents
+            //       .Skip(dataTableInfo.PageNumber*dataTableInfo.Length)
+            //       .Take(dataTableInfo.Length);
 
             return Json(new
             {
-                draw,
+                draw = dataTableInfo.Draw,
                 recordsTotal = allStudents.Count(),
                 recordsFiltered = filteredStudents.Count(),
-                data = filteredStudents
-            }, JsonRequestBehavior.AllowGet);
+                data = filteredStudents.Skip(dataTableInfo.PageNumber * dataTableInfo.Length).Take(dataTableInfo.Length)
 
+            }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -309,5 +411,77 @@ namespace MyUni.Web.Controllers
 
         //    return PartialView("_studentList", viewModel.Students);
         //}
+    }
+
+    public static class ModelExtensions
+    {
+        private static  IEnumerable<OrderExpression<T>> GetExpressionList<T>(IEnumerable<OrderedColumn> orderedColumns) where T : class
+        {
+            if (orderedColumns == null)
+            {
+                return null;
+            }
+
+            var expressions = orderedColumns.ToList().Select(column =>
+            {
+                var propertyInfo = typeof(T).GetProperty(column.Field);
+                if (propertyInfo == null)
+                {
+                    return null;
+                }
+
+                Func<T, object> func = arg => propertyInfo.GetValue(arg, null);
+
+                return new OrderExpression<T>
+                {
+                    ColumnOrder = column.ColumnOrder,
+                    Func = func
+                };
+            }).Where(x => x != null).ToList();
+
+            return expressions;
+
+        }
+
+        public static IOrderedQueryable<T> GetOrderedCollection<T>(this IQueryable<T> collection, IEnumerable<OrderedColumn> orderedColumns) where T : class
+        {
+            if (orderedColumns == null)
+            {
+                return collection as IOrderedQueryable<T>;
+            }
+
+            var expressions = GetExpressionList<T>(orderedColumns);
+
+            if (expressions == null)
+            {
+                return collection as IOrderedQueryable<T>;
+            }
+
+            var applied = false;
+
+            IOrderedQueryable<T> orderedCollection = null;
+            expressions.ForEach(x =>
+            {
+                if (applied && orderedCollection != null)
+                {
+                    collection = x.ColumnOrder == ColumnOrder.Asc ? orderedCollection.ThenBy(y => x.Func(y)) : orderedCollection.ThenByDescending(y => x.Func(y));
+                }
+                else
+                {
+                    orderedCollection = x.ColumnOrder == ColumnOrder.Asc ? collection.OrderBy(y => x.Func(y)) : collection.OrderByDescending(y => x.Func(y));
+
+                    applied = false;
+                }
+            });
+
+            return orderedCollection;
+
+        }
+    }
+
+    public class OrderExpression<T> where T : class
+    {
+        public ColumnOrder ColumnOrder { get; set; }
+        public Func<T, object> Func { get; set; }
     }
 }
