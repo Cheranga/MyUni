@@ -1,0 +1,27 @@
+﻿@using System.Diagnostics.Eventing.Reader
+@model IEnumerable<MyUni.Business.Student>
+
+@{
+    var isEmpty = Model == null || Model.Count() == 0;
+}
+
+
+@if (isEmpty)
+{
+    <div class="alert alert-warning">
+        Sorry, there are no results
+    </div>
+}
+else
+{
+    <table data-url='@Url.Action("GetStudents", "Students")' id="tblStudentsView" name="tblStudentsView" class="table table-condensed table-hover table-bordered table-striped dataTable display" role="grid">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Enrolled Date</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+}

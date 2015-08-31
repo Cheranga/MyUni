@@ -27,8 +27,6 @@ namespace MyUni.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             ModelBinders.Binders.Add(typeof(DataTableInfo), new DataTableModelBinder());
-            ModelBinders.Binders.Add(typeof(DataTableInfo<Student>), new DataTableModelBinder());
-
         }
     }
 }

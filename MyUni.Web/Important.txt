@@ -112,3 +112,18 @@ This happens when the app pool user does not have access rights to the database 
 The solution is to create this user (if it's not there), and give him the probable access rights to the database
 
 http://stackoverflow.com/questions/7698286/login-failed-for-user-iis-apppool-asp-net-v4-0
+
+
+
+Failed to load resource (font awesome web font)
+-----------------------------------------------
+https://github.com/FortAwesome/Font-Awesome/issues/5559
+
+Add the following to your web.config file as a child node inside "system.webServer"
+
+<staticContent>
+      <remove fileExtension=".woff"/>
+      <remove fileExtension=".woff2"/>
+      <mimeMap fileExtension=".woff" mimeType="application/font-woff"/>
+      <mimeMap fileExtension=".woff2" mimeType="application/font-woff2"/>
+</staticContent>

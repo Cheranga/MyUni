@@ -1,11 +1,29 @@
-﻿@*@model IEnumerable<MyUni.Business.Student>*@
-@using System.Web.Mvc.Html
-@model MyUni.Web.ViewModels.PagedViewModel<MyUni.Business.Student>
+﻿@using System.Web.Mvc.Html
+@using MyUni.Business
+
+@model IEnumerable<Student>
 
 @{
     ViewBag.Title = "Students";
 }
 
+
+<script id="tmpActions" type="text/template">
+    <div class="btn-group" role="group">
+        <button type="button" class="editBtn btn btn-sm btn-primary" onclick="editBtnClick(this)">
+            <i class="fa fa-edit"></i>
+            &nbsp;Edit
+        </button>
+        <button type="button" class="btn btn-sm btn-info">
+            <i class="fa fa-info"></i>
+            &nbsp;Details
+        </button>
+        <button type="button" class="btn btn-sm bg-red-gradient ">
+            <i class="fa fa-close"></i>
+            &nbsp;Delete
+        </button>        
+    </div>
+</script>
 
 <div class="col-sm-12">
     <div class="box box-info box-solid">
@@ -13,35 +31,16 @@
             <h3 class="box-title">Students</h3>
         </div><!-- /.box-header -->
         <div class="box-body">
-            @using (Ajax.BeginForm(new AjaxOptions
-            {
-                HttpMethod = "GET",
-                InsertionMode = InsertionMode.Replace,
-                UpdateTargetId = "divSearchResults",
-                Url = Url.Action("Index", new { search = Model.Search, currentPage = 1, fromSearch = true }),
-                AllowCache = true
-            }))
-            {
-                <div class="col-sm-3 no-left-padding">
-                    <div class="input-group input-group-sm">
-                        <input type="text" id="search" name="search" class="form-control">
-                        <span class="input-group-btn">
-                            @*<a href="@Url.Action("SearchStudents")" data-ajax="true" class="btn btn-info btn-flat">
-                                    <i class="fa fa-search"></i>
-                                </a>*@
-                            @*@Ajax.ActionLink("Search", "SearchStudents",new AjaxOptions
-                                {
-                                    InsertionMode = InsertionMode.Replace,
-                                    UpdateTargetId = "divStudents"
-                                })*@
-                            <button type="submit" class="btn btn-info btn-flat">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
-                    </div>
+            <div class="col-sm-3 no-left-padding">
+                <div class="input-group input-group-sm">
+                    <input type="text" id="search" name="search" class="form-control" placeholder="Search&hellip;">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-info btn-flat">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
                 </div>
-            }
-
+            </div>
             @*<div class="col-sm-9"></div>*@
             <div class="clearfix visible-sm-block"></div>
             <hr />
@@ -51,44 +50,12 @@
                     &nbsp;Add New Student
                 </a>
             </p>
-            <div id="divSearchResults">
-                @*@{ Html.RenderAction("SearchStudents"); }*@
-                @{ Html.RenderPartial("_studentList", Model); }
-            </div>
-
             <div>
-                <table id="tblTest" class="table table-condensed table-hover table-bordered table-striped dataTable display" role="grid">
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Enrolled Date</th>
-                        </tr>
-                    </thead>
-                </table>
+                @{ Html.RenderPartial("_studentsView", Model); }
             </div>
 
-
-        </div><!-- /.box-body -->
-        @*<div class="box-footer clearfix">
-                <ul class="pagination pagination-sm no-margin pull-right">
-
-                    @for (var index = 0; index < Model.TotalPages; index++)
-                    {
-                        <li class="@(index == Model.CurrentPage? "active" : "")">
-                            @Ajax.ActionLink((index + 1).ToString(), "Index", new { search = Model.Search, currentPage = index + 1 }, new AjaxOptions
-                            {
-                                HttpMethod = "GET",
-                                InsertionMode = InsertionMode.Replace,
-                                UpdateTargetId = "divStudents",
-                                AllowCache = true
-                            })
-
-                        </li>
-                    }
-                </ul>
-            </div>*@
-    </div><!-- /.box -->
+        </div>
+    </div>
 </div>
 
 
@@ -96,20 +63,36 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/jqueryval");
+
+    <script id="tmpActions" type="text/template">
+        <span>XXX</span>
+    </script>
+
     <script type="text/javascript">
 
+        function editBtnClick(e) {
+            debugger;
+            var test = $(e).closest('tr').data('FirstName');
+        }
+
         $(function () {
-            $("#tblTest").DataTable({
+
+            $('#search').bind('keypress', function (e) {
+                var key = e.which;
+
+                if (key === 13) {
+                    var dataTable = $('#tblStudentsView').DataTable();
+                    var url = $('#tblStudentsView').data('url') + "?search=" + $('#search').val();
+                    dataTable.ajax.url(url).load();
+                }
+            });
+
+           
+
+            var studentsView = $("#tblStudentsView").DataTable({
                 columns: [
-                    //{
-                    //    data: null,
-                    //    render: function(data, type, row) {
-                    //        // Combine the first and last names into a single table field
-                    //        return data.first_name + ' ' + data.last_name;
-                    //    }
-                    //},
-                    { data: "FirstName"},
-                    { data: "LastName"},
+                    { data: "FirstName" },
+                    { data: "LastName" },
                     {
                         data: "EnrolledDate",
                         render: function (dateObj) {
@@ -121,23 +104,35 @@
                             var result = oDate.getDate() + "/" + (oDate.getMonth() + 1) + "/" + oDate.getFullYear();
                             return "<span>" + result + "</span>";
                         }
+                    },
+                    {
+                        data: null,
+                        sortable:false,
+                        render:function(dataObj) {
+                            return $('#tmpActions').html();
+                        }
                     }
                 ],
                 "paging": true,
-                //"lengthChange": false,
-                "searching": true,
+                "lengthChange": false,
+                "searching": false,
                 "autoWidth": true,
-
                 //"searchable":false,
                 "processing": true,
                 "serverSide": true,
-                "ajax": "@Url.Action("GetTestData")"
+                "ajax": "@Url.Action("GetStudents")"
             });
-        });
 
-        function updatePageInfo(e) {
-            $('#pagedList li').removeClass('active');
-            $('#link' + e).addClass('active');
-        }
+            //$('.editBtn #tblStudentsView').bind('click', function (e) {
+            //    var test =  $(event.target).closest('tr').data('FirstName');
+            //});
+
+            $('#tblStudentsView table tbody tr .editBtn').on('click', function(e) {
+                debugger;
+                var test = $(e.target).closest('tr').data('FirstName');
+            });
+
+
+        });
     </script>
 }

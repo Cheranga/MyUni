@@ -66,6 +66,9 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Linq.Dynamic">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.4\lib\net40\System.Linq.Dynamic.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -195,11 +198,15 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InstructorController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ModelExtensions.cs" />
     <Compile Include="Controllers\MyUniBaseController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\ColumnSortOrder.cs" />
+    <Compile Include="Infrastructure\CustomHtmlExtensions.cs" />
+    <Compile Include="Infrastructure\DataTableColumnInfo.cs" />
     <Compile Include="Infrastructure\DataTableInfo.cs" />
     <Compile Include="Infrastructure\DataTableModelBinder.cs" />
     <Compile Include="Infrastructure\MyUniDependencyResolver.cs" />
@@ -339,6 +346,7 @@
     <Content Include="Views\Shared\_LayoutAdminLTE.cshtml" />
     <Content Include="Views\Shared\_Sidebar.cshtml" />
     <Content Include="Views\Students\_studentList.cshtml" />
+    <Content Include="Views\Students\_studentsView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

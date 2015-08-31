@@ -15,7 +15,7 @@ namespace MyUni.Web.Infrastructure
 
         public string Search { get; set; }
 
-        public IEnumerable<OrderedColumn> OrderedColumns { get; set; }
+        public IEnumerable<DataTableColumnInfo> OrderedColumns { get; set; }
 
 
         public int PageNumber
@@ -23,50 +23,24 @@ namespace MyUni.Web.Infrastructure
             get { return (this.Length == 0) ? 0 : (this.Start/this.Length); }
         }
 
-
-        public DataTableInfo()
+        public string OrderByExpression
         {
-            this.OrderedColumns = new List<OrderedColumn>();
+            get
+            {
+                return OrderedColumns == null
+                    ? string.Empty
+                    : string.Join(",", this.OrderedColumns.Select(x => string.Format("{0} {1}", x.Field, x.ColumnOrder)));
+            }
         }
-    }
 
-    public class DataTableInfo<T> where T:class 
-    {
-        public int Draw { get; set; }
-
-        public int Start { get; set; }
-        public int Length { get; set; }
-
-
-        public string Search { get; set; }
-
-        public IEnumerable<Func<T, object>> OrderByExpressions { get; set; }
-
-        public IEnumerable<OrderedColumn> OrderedColumns { get; set; }
-
-
-        public int PageNumber
-        {
-            get { return (this.Length == 0) ? 0 : (this.Start / this.Length); }
-        }
+        //
+        // TODO: The where condition for filtering
+        //
 
 
         public DataTableInfo()
         {
-            this.OrderedColumns = new List<OrderedColumn>();
-            this.OrderByExpressions = new List<Func<T, object>>();
+            this.OrderedColumns = new List<DataTableColumnInfo>();
         }
-    }
-
-    public enum ColumnOrder
-    {
-        Asc,
-        Desc
-    }
-
-    public class OrderedColumn
-    {
-        public string Field { get; set; }
-        public ColumnOrder ColumnOrder { get; set; }
     }
 }
