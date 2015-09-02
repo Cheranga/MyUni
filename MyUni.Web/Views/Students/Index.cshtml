@@ -72,7 +72,14 @@
         
         $(function () {
 
-            var viewModel = new app.StudentsViewModel();
+            var options = {
+                searchUrl: '@Url.Action("GetStudents")',
+                editUrl: '@Url.Action("Edit")',
+                detailsUrl: '@Url.Action("Details")',
+                deleteUrl: '@Url.Action("Delete")'
+            };
+
+            var viewModel = new app.StudentsViewModel(options);
             viewModel.init();
 
         });

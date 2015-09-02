@@ -209,6 +209,7 @@
     <Compile Include="Infrastructure\DataTableColumnInfo.cs" />
     <Compile Include="Infrastructure\DataTableInfo.cs" />
     <Compile Include="Infrastructure\DataTableModelBinder.cs" />
+    <Compile Include="Infrastructure\EntityViewModelExtensions.cs" />
     <Compile Include="Infrastructure\MyUniDependencyResolver.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -220,10 +221,13 @@
     <Compile Include="ViewModels\InstructorViewModel.cs" />
     <Compile Include="ViewModels\Student\StudentDetailViewModel.cs" />
     <Compile Include="ViewModels\PagedViewModel.cs" />
+    <Compile Include="ViewModels\Student\StudentViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\AdminLTE.css" />
     <Content Include="Content\boostrap-datetimepicker.css" />
+    <Content Include="Content\bootstrap-datepicker.css" />
+    <Content Include="Content\bootstrap-datepicker3.css" />
     <Content Include="Content\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -254,6 +258,7 @@
     <Content Include="Important.txt" />
     <Content Include="Scripts\adminlte.js" />
     <Content Include="Scripts\App\Students\index.js" />
+    <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />

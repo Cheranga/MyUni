@@ -123,7 +123,9 @@ namespace MyUni.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(student);
+
+            var viewModel = student.ToViewModel();
+            return View(viewModel);
         }
 
         //

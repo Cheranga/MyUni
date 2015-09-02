@@ -43,6 +43,11 @@ namespace MyUni.Web
                 "~/Content/Site.css"
                 ));
 
+            bundles.Add(new StyleBundle("~/bundles/datepickercss").Include(
+                "~/Content/bootstrap-datepicker.css",
+                "~/Content/bootstrap-datepicker3.css"
+                ));
+
             #endregion
             
 
@@ -57,6 +62,10 @@ namespace MyUni.Web
 
                       "~/Scripts/adminlte.js"
                       ));
+
+            bundles.Add(new ScriptBundle("~/bundles/datepickerjs").Include(
+                "~/Scripts/bootstrap-datepicker.min.js"
+                ));
 
             #endregion
         }

@@ -1,7 +1,12 @@
 ﻿var app = app || {};
 
-app.StudentsViewModel = function() {
+app.StudentsViewModel = function(options) {
     var self = {};
+
+    self.searchUrl = options.searchUrl || '';
+    self.editUrl = options.editUrl || '';
+    self.detailsUrl = options.detailsUrl || '';
+    self.deleteUrl = options.deleteUrl || '';
 
     //
     // Initialize the grid
@@ -25,7 +30,7 @@ app.StudentsViewModel = function() {
             {
                 data: null,
                 sortable: false,
-                render: function(dataObj) {
+                render: function() {
                     return $('#tmpActions').html();
                 }
             }
@@ -37,21 +42,21 @@ app.StudentsViewModel = function() {
         //"searchable":false,
         "processing": true,
         "serverSide": true,
-        "ajax": $("#tblStudentsView").data('url')
+        "ajax": self.searchUrl
     });
 
     //
     // Search function
     //
     self.search = function() {
-        var url = $('#tblStudentsView').data('url') + "?search=" + $('#search').val();
+        var url = self.searchUrl + "?search=" + $('#search').val();
         self.studentsView.ajax.url(url).load();
     };
 
     //
     // Initialize the edit buttons
     //
-    self.initCommandButtons = function (e) {
+    self.initCommandButtons = function () {
 
         //
         // Upon selection the grid row will be marked as selected
@@ -65,11 +70,13 @@ app.StudentsViewModel = function() {
         //
         // Edit button
         //
-        $('#tblStudentsView').on('click', 'tbody tr .editBtn', function (e) {
+        $('#tblStudentsView').on('click', 'tbody tr .editBtn', function () {
 
             var tr = $(this).closest('tr');
             var data = self.studentsView.row(tr).data();
-            console.log(data);
+
+            var editUrl = self.editUrl + '?id=' + data.Id;
+            window.location.href = editUrl;
         });
 
     };
@@ -94,6 +101,6 @@ app.StudentsViewModel = function() {
     };
 
     return {
-        init:self.init
-    }
+        init: self.init
+    };
 }
