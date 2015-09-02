@@ -32,3 +32,7 @@ textarea {
 .no-left-padding {
     padding-left: 0px !important;
 }
+
+.btn-right-margin {
+    margin-right: 5px !important;
+}

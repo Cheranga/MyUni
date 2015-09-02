@@ -1,15 +1,19 @@
-﻿@section customcss
+﻿@model MyUni.Web.ViewModels.Student.StudentViewModel
+
+@{
+    var formTitle = Model.Id > 0 ? "Edit Student" : "Create Student";
+}
+@section customcss
 {
     @Styles.Render("~/bundles/datepickercss");
 }
 
-@model MyUni.Web.ViewModels.Student.StudentViewModel
 
 
 <div class="col-sm-12">
     <div class="box box-info box-solid">
         <div class="box-header with-border">
-            <h3 class="box-title">Edit</h3>
+            <h3 class="box-title">@formTitle</h3>
         </div><!-- /.box-header -->
         <div class="box-body">
             @using (Html.BeginForm())
@@ -26,7 +30,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-3">
-                                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "First name is required" } })
                                 @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -34,20 +38,20 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-3">
-                                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Last name is required" } })
                                 @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.EnrolledDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-2">
-                                @*@Html.EditorFor(model => model.EnrolledDate, new { htmlAttributes = new { @class = "form-control" } })*@
-                                <div class="input-group input-append date" id="EnrolledDatePicker">
-                                    <input type="text" class="form-control" name="EnrolledDate" data-val="required" data-val-required="Date is required" />
+                            @Html.LabelFor(model => model.EnrolledDate, new { @class = "control-label col-md-2" })
+                            <div class="col-md-3">
+                                <div class="input-group date" id="EnrolledDateDiv">
+                                    @Html.TextBoxFor(model => model.EnrolledDate, new { @class = "form-control input-sm", placeholder = "Enrollment date is required" })
                                     <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                                 </div>
                                 @Html.ValidationMessageFor(model => model.EnrolledDate, "", new { @class = "text-danger" })
+                                
                             </div>
                         </div>
 
@@ -78,19 +82,18 @@
 
     <script type="text/javascript">
         $(function () {
-            $('#EnrolledDatePicker').datepicker({
-                format: 'yyyy/mm/dd'
-            }).on('changeDate show', function (e) {
-                // Revalidate the date when user change it
-                //$('form').formValidation('revalidateField', 'EnrolledDate');
-                $('#EnrolledDate').valid();
-            });;
+            $('#EnrolledDateDiv').datepicker({
+                format: 'yyyy/mm/dd',
+                autoclose: true,
+                todayHighlight: true,
+                showOnFocus: false,
+                clearBtn:true
+            });
 
-            var datePicker = $('#EnrolledDatePicker').data('datepicker');
-            datePicker.setDate(new Date("@Model.EnrolledDate.ToString("yyyy/MM/dd")"));
+            var enrolledDate = @Model.EnrolledDateForScript;
+            var datePicker = $('#EnrolledDateDiv').data('datepicker');
+            datePicker.setDate(new Date(enrolledDate));
             datePicker.update();
-            @*datePicker("setDate", new Date(@Model.EnrolledDate.Year, @Model.EnrolledDate.Month, @Model.EnrolledDate.Day));*@
-
         });
 </script>
 }

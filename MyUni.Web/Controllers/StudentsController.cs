@@ -69,7 +69,11 @@ namespace MyUni.Web.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            var viewModel = new StudentViewModel
+            {
+                EnrolledDate = DateTime.Now
+            };
+            return View("Edit", viewModel);
         }
 
         //

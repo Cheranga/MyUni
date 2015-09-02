@@ -21,6 +21,14 @@ namespace MyUni.Web.ViewModels.Student
         [Required]
         public DateTime EnrolledDate { get; set; }
 
+        public double EnrolledDateForScript
+        {
+            get
+            {
+                return this.EnrolledDate.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+            }
+        }
+
         public string FullName
         {
             get { return string.Format("{0} {1}", this.FirstName, this.LastName); }
