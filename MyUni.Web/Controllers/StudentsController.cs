@@ -64,7 +64,11 @@ namespace MyUni.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(student);
+
+            var viewModel = student.ToViewModel();
+            viewModel.Enrollments = student.Enrollments.Select(x => x.ToViewModel());
+
+            return View(viewModel);
         }
 
         public ActionResult Create()
@@ -198,7 +202,7 @@ namespace MyUni.Web.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Delete(int id)
         {
             try
@@ -220,12 +224,14 @@ namespace MyUni.Web.Controllers
                     repository.Delete(id);
                 });
 
-                return RedirectToAction("Index");
+                return Json(true, JsonRequestBehavior.AllowGet);
             }
             catch (Exception exception)
             {
-                return RedirectToAction("Delete", new { id, showError = true });
+                //return RedirectToAction("Delete", new { id, showError = true });
             }
+
+            return Json(false, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetStudents(DataTableInfo dataTableInfo, string search, string test)

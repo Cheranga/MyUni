@@ -47,7 +47,7 @@
                             @Html.LabelFor(model => model.EnrolledDate, new { @class = "control-label col-md-2" })
                             <div class="col-md-3">
                                 <div class="input-group date" id="EnrolledDateDiv">
-                                    @Html.TextBoxFor(model => model.EnrolledDate, new { @class = "form-control input-sm", placeholder = "Enrollment date is required" })
+                                    @Html.TextBoxFor(model => model.EnrolledDate, new { @class = "form-control", placeholder = "Enrollment date is required" })
                                     <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                                 </div>
                                 @Html.ValidationMessageFor(model => model.EnrolledDate, "", new { @class = "text-danger" })

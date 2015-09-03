@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using MyUni.Business;
 
 namespace MyUni.Web.ViewModels.Student
 {
@@ -33,6 +35,23 @@ namespace MyUni.Web.ViewModels.Student
         {
             get { return string.Format("{0} {1}", this.FirstName, this.LastName); }
         }
+
+        public IEnumerable<EnrollmentViewModel> Enrollments { get; set; }
+
+        public StudentViewModel()
+        {
+            this.Enrollments = new List<EnrollmentViewModel>();
+        }
         
+    }
+
+    public class EnrollmentViewModel
+    {
+        public int Id { get; set; }
+        public int StudentId { get; set; }
+        public int CourseId { get; set; }
+        public string CourseTitle { get; set; }
+        public string Title { get; set; }
+        public Grade Grade { get; set; }
     }
 }

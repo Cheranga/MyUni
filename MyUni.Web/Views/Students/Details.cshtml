@@ -1,60 +1,43 @@
-﻿@model MyUni.Business.Student
+﻿@model MyUni.Web.ViewModels.Student.StudentViewModel
 
-@{
-    ViewBag.Title = "Details";
-}
+<div class="col-sm-12">
+    <div class="box box-solid box-info">
+        <div class="box-header">
+            <h3 class="box-title">@Model.FullName</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+            @if (Model.Enrollments == null || Model.Enrollments.Count() == 0)
+            {
+                <p class="alert bg-olive-active">There are no current enrollments</p>
+            }
+            else
+            {
+                <table class="table table-hover table-striped table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="col-sm-6">Course</th>
+                            <th class="col-sm-6">Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var enrollment in Model.Enrollments)
+                    {
+                            <tr>
+                                <td>@Html.DisplayFor(x=>enrollment.CourseTitle)</td>
+                                <td>@Html.DisplayFor(x=>enrollment.Grade)</td>
+                            </tr>
+                    }
+                    </tbody>
+                </table>
+            }
 
-<h2>Details</h2>
-
-<div>
-    <h4>Student</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EnrolledDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EnrolledDate)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(x => x.Enrollments)
-        </dt>
-        <dd>
-            <table class="table">
-                <tr>
-                    <th>Title</th>
-                    <th>Grade</th>
-                </tr>
-                @foreach (var enrollment in Model.Enrollments)
-                {
-                    <tr>
-                        <td>@Html.DisplayFor(x => enrollment.Course.Title)</td>
-                        <td>@Html.DisplayFor(x => enrollment.Grade)</td>
-                    </tr>
-                }
-            </table>
-        </dd>
-
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+        </div><!-- /.box-body -->
+        <div class="box-footer">
+            <div class="pull-right">
+                <a href="@Url.Action("Index", "Students")" class="btn btn-warning">
+                    <i class="fa fa-arrow-left"></i>
+                    &nbsp;Back
+                </a>
+            </div>
+        </div>
+    </div>

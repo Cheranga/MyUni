@@ -78,6 +78,44 @@ app.StudentsViewModel = function(options) {
             var editUrl = self.editUrl + '?id=' + data.Id;
             window.location.href = editUrl;
         });
+        //
+        // Details button
+        //
+        $('#tblStudentsView').on('click', 'tbody tr .detailsBtn', function () {
+
+            var tr = $(this).closest('tr');
+            var data = self.studentsView.row(tr).data();
+
+            var detailsUrl = self.detailsUrl + '?id=' + data.Id;
+            window.location.href = detailsUrl;
+        });
+
+        //
+        // Delete button
+        //
+        $('#tblStudentsView').on('click', 'tbody tr .deleteBtn', function () {
+
+            var tr = $(this).closest('tr');
+            var data = self.studentsView.row(tr).data();
+
+            var deleteUrl = self.deleteUrl + '?id=' + data.Id;
+            $('#deleteUrl').val(deleteUrl);
+            $('#confirmDelete').modal('show');
+        });
+
+        $('#btnYes').on('click', function(e) {
+            $.ajax({
+                url: $('#deleteUrl').val(),
+                method: 'POST',
+                dataType: 'json'
+            }).done(function(data) {
+                //
+                // Refresh the data source
+                //
+                self.studentsView.ajax.reload();
+                $('#confirmDelete').modal('hide');
+            });
+        });
 
     };
 
