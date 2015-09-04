@@ -8,7 +8,7 @@
         <div class="box-body">
             @if (Model.Enrollments == null || Model.Enrollments.Count() == 0)
             {
-                <p class="alert bg-olive-active">There are no current enrollments</p>
+                <p class="lead text text-bold text-danger">There are no current enrollments</p>
             }
             else
             {
@@ -21,12 +21,12 @@
                     </thead>
                     <tbody>
                         @foreach (var enrollment in Model.Enrollments)
-                    {
+                        {
                             <tr>
                                 <td>@Html.DisplayFor(x=>enrollment.CourseTitle)</td>
                                 <td>@Html.DisplayFor(x=>enrollment.Grade)</td>
                             </tr>
-                    }
+                        }
                     </tbody>
                 </table>
             }
@@ -41,3 +41,4 @@
             </div>
         </div>
     </div>
+</div>

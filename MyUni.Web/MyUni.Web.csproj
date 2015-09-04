@@ -206,6 +206,7 @@
     </Compile>
     <Compile Include="Infrastructure\ColumnSortOrder.cs" />
     <Compile Include="Infrastructure\CustomHtmlExtensions.cs" />
+    <Compile Include="Infrastructure\CustomHtmlHelpers.cs" />
     <Compile Include="Infrastructure\DataTableColumnInfo.cs" />
     <Compile Include="Infrastructure\DataTableInfo.cs" />
     <Compile Include="Infrastructure\DataTableModelBinder.cs" />

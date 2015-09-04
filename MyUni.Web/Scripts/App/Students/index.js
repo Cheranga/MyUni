@@ -1,6 +1,6 @@
 ﻿var app = app || {};
 
-app.StudentsViewModel = function(options) {
+app.StudentsViewModel = function (options) {
     var self = {};
 
     self.searchUrl = options.searchUrl || '';
@@ -11,13 +11,27 @@ app.StudentsViewModel = function(options) {
     //
     // Initialize the grid
     //
+
+    self.detailsTemplate = $('tmpDetails').html();
+
+    self.formatCell = function (data) {
+        debugger;
+        return '<span>XXX</span>';
+    };
+
     self.studentsView = $("#tblStudentsView").DataTable({
         columns: [
+             {
+                 "className": 'details-control',
+                 "orderable": false,
+                 "data": null,
+                 "defaultContent": self.detailsTemplate
+             },
             { data: "FirstName" },
             { data: "LastName" },
             {
                 data: "EnrolledDate",
-                render: function(dateObj) {
+                render: function (dateObj) {
                     //
                     // To format the date properly
                     //  http://stackoverflow.com/questions/726334/asp-net-mvc-jsonresult-date-format
@@ -30,11 +44,12 @@ app.StudentsViewModel = function(options) {
             {
                 data: null,
                 sortable: false,
-                render: function() {
+                render: function () {
                     return $('#tmpActions').html();
                 }
             }
         ],
+        "order": [[1, 'asc']],
         "paging": true,
         "lengthChange": false,
         "searching": false,
@@ -48,10 +63,6 @@ app.StudentsViewModel = function(options) {
     //
     // Search function
     //
-    self.search = function() {
-        var url = self.searchUrl + "?search=" + $('#search').val();
-        self.studentsView.ajax.url(url).load();
-    };
 
     //
     // Initialize the edit buttons
@@ -103,12 +114,12 @@ app.StudentsViewModel = function(options) {
             $('#confirmDelete').modal('show');
         });
 
-        $('#btnYes').on('click', function(e) {
+        $('#btnYes').on('click', function (e) {
             $.ajax({
                 url: $('#deleteUrl').val(),
                 method: 'POST',
                 dataType: 'json'
-            }).done(function(data) {
+            }).done(function (data) {
                 //
                 // Refresh the data source
                 //
@@ -133,7 +144,7 @@ app.StudentsViewModel = function(options) {
         });
     };
 
-    self.init = function() {
+    self.init = function () {
         self.initSearch();
         self.initCommandButtons();
     };
