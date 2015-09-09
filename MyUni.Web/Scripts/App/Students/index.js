@@ -12,7 +12,7 @@ app.StudentsViewModel = function (options) {
     // Initialize the grid
     //
 
-    self.detailsTemplate = $('tmpDetails').html();
+    self.detailsTemplate = $('#tmpDetails').html();
 
     self.formatCell = function (data) {
         debugger;
