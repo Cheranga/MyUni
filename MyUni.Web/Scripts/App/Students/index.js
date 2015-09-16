@@ -63,7 +63,10 @@ app.StudentsViewModel = function (options) {
     //
     // Search function
     //
-
+    self.search = function () {
+        var url = self.searchUrl + "?search=" + $('#search').val();
+        self.studentsView.ajax.url(url).load();
+    };
     //
     // Initialize the edit buttons
     //
@@ -141,6 +144,10 @@ app.StudentsViewModel = function (options) {
             if (key === 13) {
                 self.search();
             }
+        });
+
+        $('#btnSearch').on('click', function() {
+            self.search();
         });
     };
 

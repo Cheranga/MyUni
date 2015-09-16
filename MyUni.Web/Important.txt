@@ -132,3 +132,7 @@ How to convert a C# date time object to a Java Script date object
 -----------------------------------------------------------------
 Sometimes, we need just to confirm the C# date object to the script, without specifying constructor parameters (year, month, date) of the java script date
 http://stackoverflow.com/questions/2404247/datetime-to-javascript-date
+
+Adding a "favicon" to the application
+-------------------------------------
+http://stackoverflow.com/questions/487230/serving-favicon-ico-in-asp-net-mvc
