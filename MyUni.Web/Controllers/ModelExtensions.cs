@@ -64,23 +64,24 @@ namespace MyUni.Web.Controllers
             //
             // Order By
             //
-            var orderedCollection = collection.OrderBy(dataTableInfo.OrderByExpression).AsQueryable();
+            var orderByExpression = dataTableInfo.OrderByExpression;
+            var orderedCollection = string.IsNullOrEmpty(orderByExpression) ? collection : collection.OrderBy(orderByExpression).AsQueryable();
             //
             // Filter
             //
             var filteredCollection = filterExpression == null ? orderedCollection : orderedCollection.Where(filterExpression);
             //
+            // Projection
+            //
+            var projectedCollection = projectionExpression == null ? filteredCollection : filteredCollection.Select(projectionExpression);
+            //
             // Paging
             //
-            if (projectionExpression == null)
-            {
-                var pagedCollection = filteredCollection.Skip(dataTableInfo.PageNumber*dataTableInfo.Length).Take(dataTableInfo.Length);
-                return pagedCollection;
-            }
+            var pagedCollection = string.IsNullOrEmpty(orderByExpression) ? projectedCollection.Take(dataTableInfo.Length) :
+                projectedCollection.Skip(dataTableInfo.PageNumber*dataTableInfo.Length).Take(dataTableInfo.Length);
+            
 
-            var projectedCollection = filteredCollection.Skip(dataTableInfo.PageNumber * dataTableInfo.Length).Take(dataTableInfo.Length).Select(projectionExpression);
-
-            return projectedCollection;
+            return pagedCollection;
 
         }
     }

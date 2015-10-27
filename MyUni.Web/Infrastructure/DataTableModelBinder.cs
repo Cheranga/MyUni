@@ -48,6 +48,10 @@ namespace MyUni.Web.Infrastructure
 
                     if (int.TryParse(colIndexData, out colIndex) && int.TryParse(orderIndexData, out orderIndex))
                     {
+                        //if (orderIndex <= 0)
+                        //{
+                        //    return null;
+                        //}
 
                         return new DataTableColumnInfo
                         {
@@ -55,8 +59,9 @@ namespace MyUni.Web.Infrastructure
                             ColumnOrder = queryStringData[string.Format(ORDER_DIR_FORMAT, orderIndex)] == "asc" ? ColumnSortOrder.Asc : ColumnSortOrder.Desc
                         };
                     }
+
                     return null;
-                }).Where(x => x != null).ToList();
+                }).Where(x => x != null && !string.IsNullOrEmpty(x.Field)).ToList();
                 //
                 // Along with the ordered columns, get the other required data. Such as "draw, start, length, search"
                 //
