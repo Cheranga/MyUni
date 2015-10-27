@@ -48,11 +48,6 @@ namespace MyUni.Web.Infrastructure
 
                     if (int.TryParse(colIndexData, out colIndex) && int.TryParse(orderIndexData, out orderIndex))
                     {
-                        //if (orderIndex <= 0)
-                        //{
-                        //    return null;
-                        //}
-
                         return new DataTableColumnInfo
                         {
                             Field = queryStringData[string.Format(COLUMN_DATA_FORMAT, colIndex)],

@@ -49,7 +49,7 @@ app.StudentsViewModel = function (options) {
                 }
             }
         ],
-        //"order": [[1, 'asc']],
+        "order": [[1, 'asc']],
         "paging": true,
         "lengthChange": false,
         "searching": false,
