@@ -16,6 +16,8 @@ using MyUni.Web.ViewModels;
 using MyUni.Web.ViewModels.Student;
 using StageDocs.DAL.Abstract;
 using WebGrease.Css.Extensions;
+using System.Linq.Dynamic;
+
 
 namespace MyUni.Web.Controllers
 {
@@ -234,7 +236,7 @@ namespace MyUni.Web.Controllers
             return Json(false, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetStudents(DataTableInfo dataTableInfo, string search, string test)
+        public ActionResult GetStudents(DataTableInfo dataTableInfo, string search = "")
         {
             if (dataTableInfo == null)
             {
@@ -261,24 +263,17 @@ namespace MyUni.Web.Controllers
                     error = "There are no students"
                 }, JsonRequestBehavior.AllowGet);
             }
-
-            var orderedList = allStudents.GetOrderedCollection(dataTableInfo.OrderedColumns);
-
-
+            
             var filter = string.IsNullOrEmpty(search) ? dataTableInfo.Search : search;
-            var filteredStudents = orderedList ?? new List<Student>().AsQueryable();
 
-            if (!string.IsNullOrEmpty(filter) && orderedList != null)
-            {
-                filteredStudents = orderedList.Where(x => x.FirstName.Contains(filter) || x.LastName.Contains(filter));
-            }
-
+            var filteredResults = dataTableInfo.ToDataSource(allStudents, student => student.FirstName.Contains(filter) || student.LastName.Contains(filter));
+            
             return Json(new
             {
                 draw = dataTableInfo.Draw,
                 recordsTotal = allStudents.Count(),
-                recordsFiltered = filteredStudents.Count(),
-                data = filteredStudents.Skip(dataTableInfo.PageNumber * dataTableInfo.Length).Take(dataTableInfo.Length)
+                recordsFiltered = filteredResults.Count(),
+                data = filteredResults
 
             }, JsonRequestBehavior.AllowGet);
         }

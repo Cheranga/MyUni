@@ -48,9 +48,9 @@ namespace MyUni.DAL
             //
             // Redirect the log "Debug.WriteLine" when the project is in DEBUG mode
             //
-#if DEBUG
+//#if DEBUG
             this.Database.Log = (x) => Debug.WriteLine(x);
-#endif
+//#endif
         }
 
         public MyUniDbContext()

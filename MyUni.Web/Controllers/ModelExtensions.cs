@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO.Compression;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Linq.Expressions;
+using System.Web.UI;
 using MyUni.Web.Infrastructure;
 
 namespace MyUni.Web.Controllers
@@ -49,6 +53,35 @@ namespace MyUni.Web.Controllers
             var orderExpression = string.Join(",", orderedColumns.Select(x => string.Format("{0} {1}", x.Field, x.ColumnOrder)));
             
             return collection.OrderBy(orderExpression);
+        }
+
+        public static IQueryable<object> ToDataSource<T>(this DataTableInfo dataTableInfo, IQueryable<T> collection, Expression<Func<T, bool>> filterExpression = null, Expression<Func<T,object>> projectionExpression = null) where T : class
+        {
+            if (collection == null)
+            {
+                return null;
+            }
+            //
+            // Order By
+            //
+            var orderedCollection = collection.OrderBy(dataTableInfo.OrderByExpression).AsQueryable();
+            //
+            // Filter
+            //
+            var filteredCollection = filterExpression == null ? orderedCollection : orderedCollection.Where(filterExpression);
+            //
+            // Paging
+            //
+            if (projectionExpression == null)
+            {
+                var pagedCollection = filteredCollection.Skip(dataTableInfo.PageNumber*dataTableInfo.Length).Take(dataTableInfo.Length);
+                return pagedCollection;
+            }
+
+            var projectedCollection = filteredCollection.Skip(dataTableInfo.PageNumber * dataTableInfo.Length).Take(dataTableInfo.Length).Select(projectionExpression);
+
+            return projectedCollection;
+
         }
     }
 }

@@ -42,5 +42,8 @@ namespace MyUni.Web.Infrastructure
         {
             this.OrderedColumns = new List<DataTableColumnInfo>();
         }
+
+        
+
     }
 }
